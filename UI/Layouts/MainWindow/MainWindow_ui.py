@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys, os
-from pathlib import Path
-resource_file_path = Path(os.getcwd()).joinpath(Path("./UI/Resources"))
-sys.path.append(str(resource_file_path))
 
 ################################################################################
 ## Form generated from reading UI file 'MainWindow.ui'
@@ -21,15 +17,15 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QMainWindow, QMenuBar, QSizePolicy, QStatusBar,
-    QToolBar, QVBoxLayout, QWidget)
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QStatusBar, QToolBar, QVBoxLayout, QWidget)
 import Resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1078, 749)
+        MainWindow.resize(1107, 839)
         self.actionNewGame = QAction(MainWindow)
         self.actionNewGame.setObjectName(u"actionNewGame")
         icon = QIcon()
@@ -52,7 +48,7 @@ class Ui_MainWindow(object):
         self.actionCloseGame.setIcon(icon3)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralwidget.setEnabled(True)
+        self.centralwidget.setEnabled(False)
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.GameRegion = QFrame(self.centralwidget)
@@ -84,6 +80,11 @@ class Ui_MainWindow(object):
         self.GameDisplayLabel.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.GameDisplayLabel)
+
+        self.pushButton = QPushButton(self.GameDisplayFrame)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.verticalLayout_2.addWidget(self.pushButton)
 
         self.GameInfoLabel = QLabel(self.GameDisplayFrame)
         self.GameInfoLabel.setObjectName(u"GameInfoLabel")
@@ -180,7 +181,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1078, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1107, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -231,6 +232,7 @@ class Ui_MainWindow(object):
         self.actionCloseGame.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+W", None))
 #endif // QT_CONFIG(shortcut)
         self.GameDisplayLabel.setText(QCoreApplication.translate("MainWindow", u"Game Display", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.GameInfoLabel.setText(QCoreApplication.translate("MainWindow", u"Create a New Game / Load Existing Game", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Selection Phase", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Expansion Phase", None))
