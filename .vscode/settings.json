@@ -1,0 +1,9 @@
+{
+    "python.analysis.extraPaths": [
+        "./UI/Layouts/MainWindow",
+        "./UI/Layouts/MenuBar",
+        "./UI/Layouts/GameArea",
+        "./UI/Functions",
+        "./UI/AI_Heuristics"
+    ]
+}
