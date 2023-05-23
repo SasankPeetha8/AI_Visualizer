@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Icons/GameClose.png</file>
+        <file>Icons/GameNew.png</file>
+        <file>Icons/GameOpen.png</file>
+        <file>Icons/GameSave.png</file>
+    </qresource>
+</RCC>
