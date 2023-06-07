@@ -274,6 +274,8 @@ class MCTS():
                 print(f"State found: {each_node.NodeState} == {positions}")
                 # Returning the child node
                 return each_node
+            else:
+                return tree_data
     
     # Defining method to find best move using MCTS
     def BestMove(self, node):

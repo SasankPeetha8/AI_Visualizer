@@ -1,5 +1,5 @@
 # Importing the required PySide 6 Modules
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QDialog
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QDialog, QGraphicsView
 # Importing the random module
 import random
 # Importing the system module and path function from Pathlib module
@@ -64,9 +64,17 @@ class CustomMainWindow(QMainWindow):
         self.__ui.L_LimitButton.clicked.connect(self.AI_Buttons_Function)
         self.__ui.M_LimitButton.clicked.connect(self.AI_Buttons_Function)
         self.__ui.H_LimitButton.clicked.connect(self.AI_Buttons_Function)
+        self.__ui.HighestLimit.clicked.connect(self.AI_Buttons_Function)
         # Defining slots and connections for AI Build Tree
         self.__ui.AIBuildTreeButton.clicked.connect(self.AIBuildTreeButtonFunction)
         self.__ui.AIMoveButton.clicked.connect(self.MakeAIMoveFunction)
+        self.__ui.AIDisplayTreeButton.clicked.connect(self.DisplayTreeFunction)
+        self.unique_nodes = { }
+        
+        self.scene = None
+        self.view = QGraphicsView()
+        self.scroll_area = None
+        self.v_layout = None
         
      
     ####################### Game Region Functionality ###############################
@@ -325,23 +333,32 @@ class CustomMainWindow(QMainWindow):
             
     # Defining functionality for the AI Move Button
     def AI_Buttons_Function(self):
+
         # Fetching the information from the AI Limit Type
         button_id = self.__ui.ThinkingTypeOptions.checkedId()
+
         # Fetching the Button Name
         button = self.sender().objectName()
-        # Fetching the text
+
         # Checking if the button is L_LimitButton
         if button == "L_LimitButton":
             # Fetching the value of the button text
             limit = self.__ui.L_LimitButton.text()
+
         elif button == "M_LimitButton":
             # Fetching the value of the button text
             limit = self.__ui.M_LimitButton.text()
+
         elif button == "H_LimitButton":
             # Fetching the value of the button text
             limit = self.__ui.H_LimitButton.text()
+
+        elif button == "HighestLimit":
+            limit = self.__ui.HighestLimit.text()
+
         # Removing the required text values
         limit = limit[:limit.index(" ")]
+
         # Checking if the checked box is iterations 
         if button_id == -2:
             # Converting the button to integer
@@ -350,6 +367,7 @@ class CustomMainWindow(QMainWindow):
             # self.__AI_Data = MCTS(self.__game, itertions=limit, time=None)
             # print(f"MCTS: Iterations-{limit}, time-None")
             self.MCTS_Data = MCTS(self.__game, itertions=limit, time=None)
+
         # Checking if the checked box is time
         elif button_id == -3:
             # Removing the required text values
@@ -358,7 +376,7 @@ class CustomMainWindow(QMainWindow):
             # self.__AI_Data = MCTS(self.__game, itertions=None, time=limit)
             # print(f"MCTS: Iterations-None, time-{limit}")
             self.MCTS_Data = MCTS(self.__game, itertions=None, time=limit)
-            
+
         # Building the MCTS Tree
         self.BuildMCTSTreeInformation()
             
@@ -372,11 +390,13 @@ class CustomMainWindow(QMainWindow):
             self.__ui.L_LimitButton.setText(f"1 Iteration")
             self.__ui.M_LimitButton.setText(f"10 Iterations")
             self.__ui.H_LimitButton.setText(f"100 Iterations")
+            self.__ui.HighestLimit.setText(f"1000 Iterations")
         elif button_id == -3:
             # Updating the values fo the buttons
             self.__ui.L_LimitButton.setText(f"0.01 Sec")
             self.__ui.M_LimitButton.setText(f"0.1 Sec")
             self.__ui.H_LimitButton.setText(f"1 Sec")
+            self.__ui.HighestLimit.setText(f"2 Sec")
     
     # Defining method to provide functionality to build MCTS Tree
     def AIBuildTreeButtonFunction(self):
@@ -413,6 +433,8 @@ class CustomMainWindow(QMainWindow):
             currentPlayer.GameTree = self.MCTS_Data.BuildTree(tree_data=game_tree)
         else:
             currentPlayer.GameTree = self.MCTS_Data.BuildTree()
+        # # Updating the game information universally
+        # self.__game = self.MCTS_Data.game_object
             
     # Defining method to make a move from the MCTS Data
     def MakeAIMoveFunction(self):
@@ -426,3 +448,110 @@ class CustomMainWindow(QMainWindow):
         self.__game.BoardPositions = best_positions
         # Updating the game display
         self.UpdateGameDisplay()
+
+    # Defining method to extract the unique nodes
+    def extractUniqueNodes(self, tree_node):
+        # Checking if the tree_node is present in the unique node keys
+        if id(tree_node) not in self.unique_nodes.keys():
+            self.unique_nodes[id(tree_node)] = tree_node
+        # Iterating through all the child nodes
+        for each_child in tree_node.ChildNodes:
+            self.extractUniqueNodes(each_child)
+
+    # Defining method to display the MCTS Tree
+    def DisplayTreeFunction(self):
+        from copy import deepcopy
+        # Finding current game player
+        currentPlayer = self.__game.FindCurrentPlayer()
+        # Finding current game player
+        # currentPlayer = self.__game.FindCurrentPlayer(self.__game.BoardPositions)
+        print(f"Current Player Character : {currentPlayer.Character}")
+        
+        # Fetching the MCTS Information
+        game_tree = deepcopy(currentPlayer.GameTree)
+        
+        self.unique_nodes = { }
+        self.extractUniqueNodes(game_tree)
+        
+        # print(f"Game Tree: {game_tree}, Type: {type(game_tree)}")
+        
+        from PySide6.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QScrollArea, QVBoxLayout, QFrame
+        from PySide6.QtGui import QPainter, QPen, QColor
+        from PySide6.QtCore import Qt
+        import matplotlib.pyplot as plt
+        import networkx as nx
+        from networkx.drawing.nx_agraph import graphviz_layout
+        from GraphicsViewScene import GraphScene
+
+        # Creating a new directed graph
+        graph = nx.DiGraph()
+
+        # unique_nodes = None
+        unique_nodes = deepcopy(self.unique_nodes)
+        
+        # list out keys and values separately
+        uniqueNodes_Keys = list(unique_nodes.keys())
+        uniqueNodes_Values = list(unique_nodes.values())
+ 
+        # print key with val 100
+        # position = val_list.index(100)
+        # print(key_list[position])
+
+        graph.clear()
+
+        for each_key in unique_nodes.keys():
+            # Extracting the game tree object from dictionary
+            node_data = unique_nodes[each_key]
+            # Fetching the parent value
+            parent_node = node_data.ParentNode
+            # Checking if parent node is valid
+            if parent_node:
+                parent_position = uniqueNodes_Keys[uniqueNodes_Values.index(parent_node)]
+                node_position = uniqueNodes_Keys[uniqueNodes_Values.index(node_data)]
+                graph.add_edge(parent_position, node_position)
+            else:
+                continue
+
+        # dict_values = list(node.treeStructure)
+        # Creating the layout for the nodes
+        layout = graphviz_layout(graph, prog="twopi", args='')
+
+        # Defining the node size
+        node_size = 20
+
+        # view = None
+        # self.view = QGraphicsView()
+        view = 0
+        if self.scene:
+            
+            # self.scroll_area.close()
+            self.view.destroy
+            del self.view
+            # self.view.deleteLater()
+            self.v_layout.removeWidget(self.scroll_area)
+            self.__ui.TreeVisualizer.setLayout(self.v_layout)
+        
+        self.scene = GraphScene(graph, layout, unique_nodes)
+        # print(f"Scenes Views: {self.scene.views.__dict__}")
+        # self.scene.setSceneRect(0,0, 800, 400)
+        self.view = QGraphicsView()
+        self.view.setScene(self.scene)
+        self.scene.drawGraph()
+        # Create a QScrollArea
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidget(self.view)
+        self.scroll_area.setWidgetResizable(True)  # Allow the view to resize with the scroll area
+        self.v_layout = QVBoxLayout()
+        self.v_layout.addWidget(self.scroll_area)
+        
+        self.__ui.TreeVisualizer.setLayout(self.v_layout)
+        
+        self.UpdateGameDisplay()
+        
+        # Set the QScrollArea as the central widget
+        # window = QMainWindow()
+        # window.setCentralWidget(scroll_area)
+
+        # # Show the main window
+        # window.show()
+        # application.exec()

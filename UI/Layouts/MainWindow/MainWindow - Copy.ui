@@ -17,11 +17,11 @@
    <property name="enabled">
     <bool>true</bool>
    </property>
-   <layout class="QGridLayout" name="gridLayout" columnstretch="1,2">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
      <widget class="QFrame" name="GameRegion">
       <property name="enabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -138,9 +138,6 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="inputMethodHints">
-                <set>Qt::ImhNone</set>
-               </property>
                <property name="text">
                 <string/>
                </property>
@@ -184,13 +181,7 @@
        <item>
         <widget class="QGroupBox" name="AIMoveFrame">
          <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+          <bool>false</bool>
          </property>
          <property name="title">
           <string>AI Move Options</string>
@@ -199,13 +190,7 @@
           <item>
            <widget class="QGroupBox" name="AITypeBox">
             <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+             <bool>false</bool>
             </property>
             <property name="title">
              <string>Thinking Type</string>
@@ -217,10 +202,10 @@
              <item>
               <widget class="QCheckBox" name="IterationsCheckBox">
                <property name="enabled">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -238,12 +223,6 @@
              </item>
              <item>
               <widget class="QCheckBox" name="TimeCheckBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="text">
                 <string>Time</string>
                </property>
@@ -255,16 +234,13 @@
              <item>
               <widget class="QCheckBox" name="EnableReUseCheckBox">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
                <property name="text">
                 <string>Re-Use MCTS Tree</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -273,12 +249,6 @@
           </item>
           <item>
            <widget class="QFrame" name="LimitsFrame">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -288,12 +258,6 @@
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
               <widget class="QPushButton" name="L_LimitButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="text">
                 <string>1 Iteration</string>
                </property>
@@ -301,12 +265,6 @@
              </item>
              <item>
               <widget class="QPushButton" name="M_LimitButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="text">
                 <string>10 Iterations</string>
                </property>
@@ -314,27 +272,8 @@
              </item>
              <item>
               <widget class="QPushButton" name="H_LimitButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="text">
                 <string>100 Iterations</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="HighestLimit">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>1000 Iterations</string>
                </property>
               </widget>
              </item>
@@ -343,12 +282,6 @@
           </item>
           <item>
            <widget class="QFrame" name="ManualEntryFrame">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -359,7 +292,7 @@
              <item>
               <widget class="QLabel" name="LimitsLabel">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -372,13 +305,10 @@
              <item>
               <widget class="QLineEdit" name="AILimitsEdit">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
-               </property>
-               <property name="inputMethodHints">
-                <set>Qt::ImhNone</set>
                </property>
                <property name="text">
                 <string/>
@@ -390,12 +320,6 @@
           </item>
           <item>
            <widget class="QPushButton" name="AIBuildTreeButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="text">
              <string>Build MCTS Tree</string>
             </property>
@@ -403,12 +327,6 @@
           </item>
           <item>
            <widget class="QPushButton" name="AIDisplayTreeButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="text">
              <string>Display MCTS Tree</string>
             </property>
@@ -416,12 +334,6 @@
           </item>
           <item>
            <widget class="QPushButton" name="AIMoveButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="text">
              <string>Make AI based Move</string>
             </property>
@@ -446,7 +358,7 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item>
      <widget class="QFrame" name="TreeVisualizer">
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">

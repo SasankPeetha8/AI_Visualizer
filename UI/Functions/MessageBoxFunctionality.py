@@ -22,6 +22,7 @@ class NewGameDialog(QDialog):
         # self.__newGameDialogBox.DialogButtons.rejected.connect(self.reject)
         okay_button.clicked.connect(self.accept)
         cancel_button.clicked.connect(self.reject)
+        
     
     # Defining method to extract the board data
     def getBoardSize(self):
