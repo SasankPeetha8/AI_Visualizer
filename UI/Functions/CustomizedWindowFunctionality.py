@@ -86,6 +86,13 @@ class CustomMainWindow(QMainWindow):
         self.__ui.RandomMoveFrame.setVisible(False)
         # Hiding AI Move Options
         self.__ui.AIMoveFrame.setVisible(False)
+        # Hide Tree View Functionality
+        self.__ui.TreeVisualizer.setVisible(False)
+        # Hide Tree View Label
+        self.__ui.TreeDisplayLabel.setVisible(False)
+        
+    ####################### Tree View Functionality #################################
+    
     
     ####################### Game Heuristic Functionality ############################
     # Defining methods to fetch the player options
@@ -221,6 +228,10 @@ class CustomMainWindow(QMainWindow):
             if -4 in player_options:
                 # Un-Hiding the AI Move Options
                 self.__ui.AIMoveFrame.setVisible(True)
+                # Un-Hiding the Tree Visualizer
+                self.__ui.TreeVisualizer.setVisible(True)
+                # Un-Hiding the Tree Visualizer Label
+                self.__ui.TreeDisplayLabel.setVisible(True)
             # Creating an instance of the game object
             self.__game = TicTacToe(first_player=player_X, second_player=player_Y, board_size=boardSize)
             # Updating the game display
@@ -412,10 +423,12 @@ class CustomMainWindow(QMainWindow):
                 # Updating the MCTS data
                 # print(f"MCTS: Iterations-{int(limit)}, Time-None")
                 self.MCTS_Data = MCTS(game_object=self.__game, itertions=int(limit), time=None)
+                self.displayLongMessage(f"Game Positions: {self.__game.BoardPositions}")
             elif button_id == -3:
                 # Updating the MCTS Data
                 # print(f"MCTS: Iterations-None, Time-{float(limit)}")    
                 self.MCTS_Data = MCTS(game_object=self.__game, itertions=None, time=limit)
+                self.displayLongMessage(f"Game Positions: {self.__game.BoardPositions}")
         except ValueError:
             self.displayShortMessage(f"Invalid limit provided for MCTS")
         
@@ -426,15 +439,25 @@ class CustomMainWindow(QMainWindow):
         # Fetching information if Re-Use check box is enabled or not
         enableMCTSReuse = self.__ui.EnableReUseCheckBox.isEnabled()
         # Checking if the Re-Use button is available or not
-        if enableMCTSReuse and currentPlayer.GameTree != None:
+        if enableMCTSReuse and currentPlayer.GameTree != None and currentPlayer.GameTree != False:
             # Finding the current game state from the existing game tree
             game_tree = self.MCTS_Data.FindState(currentPlayer.GameTree, self.__game.BoardPositions)
-            # Building the game tree
-            currentPlayer.GameTree = self.MCTS_Data.BuildTree(tree_data=game_tree)
+            # Checking if the game tree is valid or not
+            if game_tree:
+                # Building the game tree
+                currentPlayer.GameTree = self.MCTS_Data.BuildTree(tree_data=game_tree)
+            else:
+                # Updating the game object
+                self.MCTS_Data.game_object = self.__game
+                # Building the game tree
+                currentPlayer.GameTree = self.MCTS_Data.BuildTree()
+            # self.displayLongMessage(f"Building game Tree with Old Game Tree")
         else:
+            # Updating the game object
+            self.MCTS_Data.game_object = self.__game
+            # Building the game tree
             currentPlayer.GameTree = self.MCTS_Data.BuildTree()
-        # # Updating the game information universally
-        # self.__game = self.MCTS_Data.game_object
+            # self.displayLongMessage(f"Building game Tree with New Game Tree")
             
     # Defining method to make a move from the MCTS Data
     def MakeAIMoveFunction(self):
@@ -522,14 +545,14 @@ class CustomMainWindow(QMainWindow):
         # view = None
         # self.view = QGraphicsView()
         view = 0
-        if self.scene:
+        # if self.scene:
             
-            # self.scroll_area.close()
-            self.view.destroy
-            del self.view
-            # self.view.deleteLater()
-            self.v_layout.removeWidget(self.scroll_area)
-            self.__ui.TreeVisualizer.setLayout(self.v_layout)
+        #     # self.scroll_area.close()
+        #     self.view.destroy
+        #     del self.view
+        #     # self.view.deleteLater()
+        #     self.v_layout.removeWidget(self.scroll_area)
+        #     self.__ui.TreeVisualizer.setLayout(self.v_layout)
         
         self.scene = GraphScene(graph, layout, unique_nodes)
         # print(f"Scenes Views: {self.scene.views.__dict__}")
@@ -538,13 +561,16 @@ class CustomMainWindow(QMainWindow):
         self.view.setScene(self.scene)
         self.scene.drawGraph()
         # Create a QScrollArea
-        self.scroll_area = QScrollArea()
-        self.scroll_area.setWidget(self.view)
-        self.scroll_area.setWidgetResizable(True)  # Allow the view to resize with the scroll area
-        self.v_layout = QVBoxLayout()
-        self.v_layout.addWidget(self.scroll_area)
+        # self.scroll_area = QScrollArea()
+        # self.scroll_area.setWidget(self.view)
+        # self.scroll_area.setWidgetResizable(True)  # Allow the view to resize with the scroll area
+        # self.v_layout = QVBoxLayout()
+        # self.v_layout.addWidget(self.scroll_area)
         
-        self.__ui.TreeVisualizer.setLayout(self.v_layout)
+        self.__ui.TreeVisualizer.setWidget(self.view)
+        self.__ui.TreeVisualizer.setWidgetResizable(True)
+        
+        # self.__ui.TreeVisualizer.setLayout(self.v_layout)
         
         self.UpdateGameDisplay()
         

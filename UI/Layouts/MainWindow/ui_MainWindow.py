@@ -23,8 +23,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QFrame,
     QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QToolBar,
-    QVBoxLayout, QWidget)
+    QScrollArea, QSizePolicy, QSpacerItem, QStatusBar,
+    QToolBar, QVBoxLayout, QWidget)
 import Resources_rc
 
 class Ui_MainWindow(object):
@@ -313,19 +313,35 @@ class Ui_MainWindow(object):
         self.verticalLayout.addItem(self.verticalSpacer)
 
 
-        self.gridLayout.addWidget(self.GameRegion, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.GameRegion, 0, 0, 2, 1)
 
-        self.TreeVisualizer = QFrame(self.centralwidget)
-        self.TreeVisualizer.setObjectName(u"TreeVisualizer")
-        sizePolicy7 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        self.TreeDisplayLabel = QLabel(self.centralwidget)
+        self.TreeDisplayLabel.setObjectName(u"TreeDisplayLabel")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.TreeVisualizer.sizePolicy().hasHeightForWidth())
-        self.TreeVisualizer.setSizePolicy(sizePolicy7)
-        self.TreeVisualizer.setFrameShape(QFrame.StyledPanel)
-        self.TreeVisualizer.setFrameShadow(QFrame.Raised)
+        sizePolicy7.setVerticalStretch(1)
+        sizePolicy7.setHeightForWidth(self.TreeDisplayLabel.sizePolicy().hasHeightForWidth())
+        self.TreeDisplayLabel.setSizePolicy(sizePolicy7)
+        self.TreeDisplayLabel.setFont(font)
+        self.TreeDisplayLabel.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout.addWidget(self.TreeVisualizer, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.TreeDisplayLabel, 0, 1, 1, 1)
+
+        self.TreeVisualizer = QScrollArea(self.centralwidget)
+        self.TreeVisualizer.setObjectName(u"TreeVisualizer")
+        self.TreeVisualizer.setEnabled(True)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(11)
+        sizePolicy8.setHeightForWidth(self.TreeVisualizer.sizePolicy().hasHeightForWidth())
+        self.TreeVisualizer.setSizePolicy(sizePolicy8)
+        self.TreeVisualizer.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 664, 592))
+        self.TreeVisualizer.setWidget(self.scrollAreaWidgetContents)
+
+        self.gridLayout.addWidget(self.TreeVisualizer, 1, 1, 1, 1)
 
         self.gridLayout.setColumnStretch(0, 1)
         self.gridLayout.setColumnStretch(1, 2)
@@ -405,6 +421,7 @@ class Ui_MainWindow(object):
         self.AIBuildTreeButton.setText(QCoreApplication.translate("MainWindow", u"Build MCTS Tree", None))
         self.AIDisplayTreeButton.setText(QCoreApplication.translate("MainWindow", u"Display MCTS Tree", None))
         self.AIMoveButton.setText(QCoreApplication.translate("MainWindow", u"Make AI based Move", None))
+        self.TreeDisplayLabel.setText(QCoreApplication.translate("MainWindow", u"Tree Display", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
 

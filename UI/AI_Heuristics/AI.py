@@ -275,7 +275,8 @@ class MCTS():
                 # Returning the child node
                 return each_node
             else:
-                return tree_data
+                print(f"Not State found: {positions}")
+                return False
     
     # Defining method to find best move using MCTS
     def BestMove(self, node):
