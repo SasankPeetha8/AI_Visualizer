@@ -369,7 +369,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MCTS Visualiser", None))
         self.actionNewGame.setText(QCoreApplication.translate("MainWindow", u"NewGame", None))
 #if QT_CONFIG(tooltip)
         self.actionNewGame.setToolTip(QCoreApplication.translate("MainWindow", u"Start a new game", None))

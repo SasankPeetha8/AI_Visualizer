@@ -434,6 +434,8 @@ class CustomMainWindow(QMainWindow):
         
     # Defining method build MCTS Tree Data
     def BuildMCTSTreeInformation(self):
+        # Updating the game object
+        self.MCTS_Data.game_object = self.__game
         # Finding current game player
         currentPlayer = self.__game.FindCurrentPlayer()
         # Fetching information if Re-Use check box is enabled or not
@@ -447,14 +449,10 @@ class CustomMainWindow(QMainWindow):
                 # Building the game tree
                 currentPlayer.GameTree = self.MCTS_Data.BuildTree(tree_data=game_tree)
             else:
-                # Updating the game object
-                self.MCTS_Data.game_object = self.__game
                 # Building the game tree
                 currentPlayer.GameTree = self.MCTS_Data.BuildTree()
             # self.displayLongMessage(f"Building game Tree with Old Game Tree")
         else:
-            # Updating the game object
-            self.MCTS_Data.game_object = self.__game
             # Building the game tree
             currentPlayer.GameTree = self.MCTS_Data.BuildTree()
             # self.displayLongMessage(f"Building game Tree with New Game Tree")
