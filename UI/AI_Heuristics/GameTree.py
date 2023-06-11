@@ -18,11 +18,45 @@ class Tree():
         self.__Is_Leafnode = True
         # Defining list to store all the possible states
         self.__PossibleStates = possible_states
-        
+        # Defining the type of the node
+        self.__node_type = "Leaf Node" if parent else "Root Node"
+        # Defining the creation value
+        self.__creation = 0
+        # Defining the minimum iterations
+        self.__minIterations = [ ]
+        # Defining the best node
+        self.best_node = False
+        # Defining the required iterations
+        self.requiredIterations = 0
+    
     # Defining the properties
     @property
     def ParentNode(self):
         return self.__ParentNode
+    
+    @property
+    def minIterations(self):
+        return self.__minIterations[:]
+    
+    @minIterations.setter
+    def minIterations(self, value):
+        self.__minIterations = value[:]
+    
+    @property
+    def Creation(self):
+        return self.__creation
+    
+    @Creation.setter
+    def Creation(self, val):
+        self.__creation = val
+    
+    @property
+    def NodeType(self):
+        return f"{self.__node_type}"
+    
+    @NodeType.setter
+    def NodeType(self, str_value):
+        self.__node_type = f"{str_value}"
     
     @ParentNode.setter
     def ParentNode(self, val):

@@ -66,7 +66,7 @@ class MCTS():
         return score
     
     # Defining method for single node selection
-    def Single_Select(self, node):
+    def Single_Select(self, node, count):
         # Displaying message to show the current phase
         print(f" :::::::::: Inside Single Select :::::::::: ")
         # Initialising list for best moves
@@ -93,11 +93,15 @@ class MCTS():
         best_state = random.choice(best_moves) if (len(best_moves) > 1) else best_moves[0]
         # returning the best state
         print(f"The following node is selected in Single Select Phase:\n{best_state}")
+        # Checking if count is valid
+        if count:
+        # Updating the min iterations value
+            best_state.minIterations = best_state.minIterations + [ count ]
         return best_state
             
     
     # Defining method for node selection
-    def Select_Node(self, node):
+    def Select_Node(self, node, iteration):
         # Displaying message to show the current phase
         print(f" :::::::::: Inside Select Node :::::::::: ")
         # Checking if the node is a leaf node or not
@@ -107,10 +111,10 @@ class MCTS():
                 return node
             # If the node is not a leaf node then selecting the sub-child node
             else:
-                node = self.Single_Select(node)
+                node = self.Single_Select(node, iteration)
     
     # Defining the method for node expansion
-    def Expand_Node(self, node):
+    def Expand_Node(self, node, iteration_value):
         # Displaying message to show the current phase
         print(f" :::::::::: Inside Expand Node :::::::::: ")
         # Fetching the positions from the node state
@@ -118,6 +122,8 @@ class MCTS():
         # Checking if the node is win or draw
         if self.game_object.IsWin(positions) or self.game_object.IsDraw(positions):
             print(f"The selected node is terminal node.\n{node}")
+            # Updating the node type
+            node.NodeType = f"Terminal Node"
             return node
         
         # Fetching all the possible states
@@ -132,8 +138,14 @@ class MCTS():
         if len(node.PossibleStates) == 0:
             # Updating the leafnode status
             node.Is_Leafnode = False
+            # Checking if the node type is not root node
+            if node.NodeType != f"Root Node":
+                # Updating the node type
+                node.NodeType = f"Internal Node"
         # Creating a new tree node
         new_node = Tree(current_state=selected_state, possible_states=self.game_object.AvailableStates(selected_state), parent=node)
+        # Updating the creation value
+        new_node.Creation = iteration_value
         # Appending the new node as child node
         node.ChildNodes = node.ChildNodes + [ new_node ]
         # Displaying the message
@@ -219,10 +231,10 @@ class MCTS():
         print(f" ------ Iteration: {count} -------")
         
         # Defining the Phase 1 of MCTS
-        node = self.Select_Node(root_node)
+        node = self.Select_Node(root_node, count)
         
         # Defining the Phase 2 of MCTS
-        node = self.Expand_Node(node)
+        node = self.Expand_Node(node, count)
         
         # Defining the Phase 3 of MCTS
         score = self.Simulate_Node(node)
@@ -280,13 +292,13 @@ class MCTS():
                     # Returning the child node
                     return each_node
                 else:
-                    print(f"Not State found: {positions}")
+                    # print(f"Not State found: {positions}")
                     return False
     
     # Defining method to find best move using MCTS
     def BestMove(self, node):
         # Fetching the best node
-        best_move = self.Single_Select(node)
+        best_move = self.Single_Select(node, False)
         # Displaying the message
         print(f"The following node is selected in the Best Move:\n{best_move}")
         # Printing the seperator line

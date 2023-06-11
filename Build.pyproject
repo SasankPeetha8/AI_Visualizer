@@ -1,3 +1,3 @@
 {
-    "files": ["UI/Resources/Resources.qrc","UI/Functions/CustomizedWindow.py","UI/Layouts/GameArea/AIMoveWidget.ui","UI/Layouts/MainWindow/MainWindow.ui","UI/Functions/MessageBoxFunctionality.py","UI/Layouts/MenuBar/CloseGameMessageBox.ui","Application.py","UI/Layouts/GameArea/ManualMoveWidget.ui","UI/Layouts/MenuBar/NewGameMessageBox.ui","Build_Helper/Convert_UI.py","UI/Layouts/GameArea/RandomMoveWidget.ui","UI/Layouts/MainWindow/Test.ui"]
+    "files": ["UI/Layouts/MainWindow/MainWindow.ui","UI/Layouts/GameArea/ManualMoveWidget.ui","UI/Layouts/MainWindow/Test.ui","UI/Functions/CustomizedWindow.py","Application.py","UI/Resources/Resources.qrc","UI/Layouts/MenuBar/NewGameMessageBox.ui","UI/Functions/MessageBoxFunctionality.py","UI/Layouts/GameArea/RandomMoveWidget.ui","Build_Helper/Convert_UI.py","UI/Layouts/GameArea/AIMoveWidget.ui","UI/Layouts/MenuBar/CloseGameMessageBox.ui","UI/Functions/NodeInfoDialog.ui"]
 }

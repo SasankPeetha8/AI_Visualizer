@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
-    <height>385</height>
+    <width>486</width>
+    <height>394</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -87,7 +87,21 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QFormLayout" name="formLayout">
-      <item row="1" column="0">
+      <item row="2" column="0">
+       <widget class="QLabel" name="nodeTypeLabel">
+        <property name="text">
+         <string>Node Type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="nodeTypeValue">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <widget class="QLabel" name="nodeWinLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -100,14 +114,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="nodeVisitLabel">
-        <property name="text">
-         <string>Visit Count</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
+      <item row="3" column="1">
        <widget class="QLabel" name="nodeWinValue">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
@@ -120,94 +127,87 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="4" column="0">
+       <widget class="QLabel" name="nodeVisitLabel">
+        <property name="text">
+         <string>Visit Count</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
        <widget class="QLabel" name="nodeVisitValue">
         <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="childNodeValue">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="childNodeLabel">
         <property name="text">
          <string>Available Child Nodes</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="createIterationLabel">
-        <property name="text">
-         <string>Created at Iteration</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="createIterationValue">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="currentPlayeLabel">
-        <property name="text">
-         <string>Current Player</string>
-        </property>
-       </widget>
-      </item>
       <item row="5" column="1">
-       <widget class="QLabel" name="currentPlayerValue">
+       <widget class="QLabel" name="childNodeValue">
         <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
       <item row="6" column="0">
+       <widget class="QLabel" name="createIterationLabel">
+        <property name="text">
+         <string>Created at Iteration</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QLabel" name="createIterationValue">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
        <widget class="QLabel" name="bestNodeLabel">
         <property name="text">
          <string>Best Node</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="8" column="1">
        <widget class="QLabel" name="bestNodeValue">
         <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
-       <widget class="QLabel" name="bestNodeIterationsValue">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="bestNodeIterationsLabel">
         <property name="text">
          <string>Minium Iterations required for best Node</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="nodeTypeLabel">
+      <item row="9" column="1">
+       <widget class="QLabel" name="bestNodeIterationsValue">
         <property name="text">
-         <string>Node Type</string>
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="nodeTypeValue">
+      <item row="7" column="1">
+       <widget class="QLabel" name="nodeDepthValue">
         <property name="text">
          <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="nodeDepthLabel">
+        <property name="text">
+         <string>Node Depth</string>
         </property>
        </widget>
       </item>

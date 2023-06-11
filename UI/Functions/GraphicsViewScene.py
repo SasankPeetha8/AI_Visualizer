@@ -70,14 +70,28 @@ class GraphScene(QGraphicsScene):
         root_node.updateBrushColour(brush)
         # Fetching the best node information
         best_node = self.fetchBestNode(root_node)
+        # Fetching the number of visits of the root node
+        rootVisits = root_node.node_info.NodeVisits
+        # Creating a list
+        rootVisits = list(range(1, rootVisits+1))
         # Checking if best_node is valid
-        if best_node:
+        if len(best_node):
             # Specifying the colour for the best node
             fillColour = QColor(f"#ff8b17")
             # Specifying the brush colour for the best node
             brush = QBrush(fillColour)
+            for each_circle in best_node:
             # Updating the colour for the best node
-            best_node.updateBrushColour(brush)
+                each_circle.updateBrushColour(brush)
+                # Fetching the node data
+                node_iterations = each_circle.node_info.minIterations
+                # Extracting the difference
+                difference = list(set(rootVisits) - set(node_iterations))
+                # Fetching the last value
+                each_circle.node_info.best_node = True
+                each_circle.node_info.requiredIterations = difference[-1] if len(difference) > 0 else 0
+                
+                
     
     # def updateRootNodeColor(self):
     #     # Fetching the root node information
@@ -115,15 +129,22 @@ class GraphScene(QGraphicsScene):
                 # Updating the list
                 best_node = best_node + [ child_node ]
         
-        best_node =  best_node[0] if len(best_node) == 1 else random.choice(best_node)
+        # best_node =  best_node[0] if len(best_node) == 1 else random.choice(best_node)
         
+        # Circles found
+        circles_found = [ ]
         # Iterating through the circle to find the node
-        for each_circle in self.__nodes_stored:
-            # Extracting the node info stored in each circle
-            node_data = each_circle.node_info
-            # Checking if the nodes states are matching or not
-            if best_node.NodeState == node_data.NodeState:
-                return each_circle
+        for each_node in best_node:
+            node_state = each_node.NodeState
+            for each_circle in self.__nodes_stored:
+                # Extracting the node info stored in each circle
+                circle_state = each_circle.node_info.NodeState
+                # Checking if the nodes states are matching or not
+                if node_state == circle_state:
+                    circles_found = circles_found + [ each_circle ]
+                    break
+            # Continuing with another node
+            # continue
                     
         # Returning the best node
-        return None
+        return circles_found

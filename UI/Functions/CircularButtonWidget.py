@@ -44,7 +44,7 @@ class CircularButton(QGraphicsEllipseItem):
             brush = QBrush(Qt.black)
             # Specifying to use the brush
             self.setBrush(brush)
-            print(f"Mouse Left Button is pressed")
+            # print(f"Mouse Left Button is pressed")
             
     # Defining the mouse release event
     def mouseReleaseEvent(self, event):
