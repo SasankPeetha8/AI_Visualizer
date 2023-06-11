@@ -12,7 +12,9 @@ class GraphScene(QGraphicsScene):
         self.graph = graph
         self.layout = layout
         self.nodeData = nodes_data
-        self.__nodes_stored = [ ]
+        self.nodes_stored = [ ]
+        
+        
 
     def drawGraph(self):
         # Set up pen for drawing edges
@@ -34,7 +36,7 @@ class GraphScene(QGraphicsScene):
             ellipse = CircularButton(x - node_size / 2, y - node_size / 2, node_size, self.nodeData[node_id])
             self.addItem(ellipse)
             # Appending the ellipse buttons into the nodes_stored
-            self.__nodes_stored = self.__nodes_stored + [ ellipse ]
+            self.nodes_stored = self.nodes_stored + [ ellipse ]
         
          # Draw edges with arrows
         for u, v in self.graph.edges:
@@ -61,7 +63,7 @@ class GraphScene(QGraphicsScene):
     # Update node colours
     def UpdateColors(self):
         # Fetching the root node information
-        root_node = self.__nodes_stored[0]
+        root_node = self.nodes_stored[0]
         # Specifying the colour for the root node
         fillColour = QColor(f"#00a300")
         # Specifying the brush colour for the root node
@@ -95,7 +97,7 @@ class GraphScene(QGraphicsScene):
     
     # def updateRootNodeColor(self):
     #     # Fetching the root node information
-    #     root_node = self.__nodes_stored[0]
+    #     root_node = self.nodes_stored[0]
     #     # Specifying the colour
     #     fillColour = QColor(f"#00a300")
     #     # Specifying the brush colour
@@ -136,7 +138,7 @@ class GraphScene(QGraphicsScene):
         # Iterating through the circle to find the node
         for each_node in best_node:
             node_state = each_node.NodeState
-            for each_circle in self.__nodes_stored:
+            for each_circle in self.nodes_stored:
                 # Extracting the node info stored in each circle
                 circle_state = each_circle.node_info.NodeState
                 # Checking if the nodes states are matching or not

@@ -67,9 +67,10 @@ class CustomMainWindow(QMainWindow):
         self.__ui.H_LimitButton.clicked.connect(self.AI_Buttons_Function)
         self.__ui.HighestLimit.clicked.connect(self.AI_Buttons_Function)
         # Defining slots and connections for AI Build Tree
-        self.__ui.AIBuildTreeButton.clicked.connect(self.AIBuildTreeButtonFunction)
+        self.__ui.SearchStateButton.clicked.connect(self.SearchStateButtonFunction)
         self.__ui.AIMoveButton.clicked.connect(self.MakeAIMoveFunction)
         self.__ui.AIDisplayTreeButton.clicked.connect(self.DisplayTreeFunction)
+        
         
         self.unique_nodes = { }
         
@@ -94,6 +95,14 @@ class CustomMainWindow(QMainWindow):
         self.__ui.TreeVisualizer.setVisible(False)
         # Hide Tree View Label
         self.__ui.TreeDisplayLabel.setVisible(False)
+        # Hiding the re-use tree checkbox
+        self.__ui.EnableReUseCheckBox.setVisible(False)
+        # Hiding the manual move frame
+        self.__ui.ManualEntryFrame.setVisible(False)
+        self.__ui.SearchStateButton.setVisible(False)
+        # Hiding load game action
+        self.__ui.actionLoadGame.setVisible(False)
+        self.__ui.actionSaveGame.setVisible(False)
         
     ####################### Tree View Functionality #################################
     
@@ -163,7 +172,12 @@ class CustomMainWindow(QMainWindow):
         self.__ui.ManualMoveFrame.setEnabled(False)
         
         # Fetching the status of the current player
-        currentPlayer = self.__game.FindCurrentPlayer().Type
+        currentPlayer = self.__game.FindCurrentPlayer()
+        if currentPlayer:
+            currentPlayer = currentPlayer.Type
+        else:
+            self.displayLongMessage(f"Invalid Game State Detected")
+            return None
         # Checking if the current player and preferred player are same
         if currentPlayer.lower() == "ai":
             # Displaying the random and AI moves
@@ -238,6 +252,20 @@ class CustomMainWindow(QMainWindow):
                 self.__ui.TreeDisplayLabel.setVisible(True)
             # Creating an instance of the game object
             self.__game = TicTacToe(first_player=player_X, second_player=player_Y, board_size=boardSize)
+            # Feching the custom game status
+            customGameState = dialogBox.getCustomGameStatus()
+            if customGameState:
+                # converting to list
+                print(f"Valid Game State")
+                customGameState = customGameState.split(" ")
+                if len(customGameState) == len(self.__game.BoardPositions):
+                    self.__game.BoardPositions = customGameState
+                    # Updating the game display
+                    self.__ui.GameInfoLabel.setText(self.__game.__str__())
+                else:
+                    print(f"Invalid Length")
+                    print(customGameState)
+                    self.displayShortMessage(f"Invalid custom state provided, resetting to beginning state")
             # Updating the game display
             self.UpdateGameDisplay()
             # Display the player move information
@@ -274,7 +302,7 @@ class CustomMainWindow(QMainWindow):
             self.MCTS_Data = None
             # Clearing UI related elements
             self.ClearUIElements()
-            
+            # Enabling the search options
             self.displayShortMessage(f"Closed the game")
         # If response is Cancel, then disable the new game but show the status
         else:
@@ -492,7 +520,47 @@ class CustomMainWindow(QMainWindow):
             self.__toggleVisualiserArea(True)
             # self.displayLongMessage(f"Building game Tree with New Game Tree")
         # Updating the game board
+    
+    # Defining method for the search state button function
+    def SearchStateButtonFunction(self):
+        # Fetching the board state values
+        board_positions = self.__ui.stateValue.text()
+        # Removing leading edges and trailing edges
+        board_positions = board_positions.strip()
+        # Converting the board positions from string to list
+        board_positions = board_positions.split(" ")
+        # Fetching the circular nodes
+        availableCircles = self.scene.nodes_stored[:]
+        states_found = [ ]
+        # Iterating through all the circles to find the state
+        for each_circle in availableCircles:
+            circle_node_data = each_circle.node_info
+            if circle_node_data.NodeState == board_positions:
+                states_found = states_found + [ circle_node_data ]
+        
+        if len(states_found):
+            from DialogBox import DialogBox
+            # Creating the dialog box
+            dialog_box = DialogBox(states_found[0])
+            dialog_box.setWindowTitle(f"Searching required State")
+            # updating the states in the dialog box
+            dialog_box.available_states = states_found
+            # updating the index
+            dialog_box.index = 0
+            dialog_box.UpdateAllValues()
+            # Disabling and enabling the buttons
+            dialog_box.ui.previousMoveButton.setEnabled(False)
+            if len(states_found) > 1:
+                dialog_box.ui.nextMoveButton.setEnabled(True)
+            dialog_box.updateTitle = True
+            dialog_box.updateTitleValue()
+            # Running the dialog box
+            dialog_box.exec()
+        else:
+            self.displayShortMessage(f"The Node state is not found. Please retry.")
             
+        
+    
     # Defining method to make a move from the MCTS Data
     def MakeAIMoveFunction(self):
         # Checking if MCTS Object is valid or not
@@ -545,6 +613,10 @@ class CustomMainWindow(QMainWindow):
         # currentPlayer = self.__game.FindCurrentPlayer(self.__game.BoardPositions)
         print(f"Current Player Character : {currentPlayer.Character}")
         
+        # Enabling the search options
+        self.__ui.ManualEntryFrame.setVisible(True)
+        self.__ui.SearchStateButton.setVisible(True)
+        
         # Fetching the MCTS Information
         game_tree = deepcopy(currentPlayer.GameTree)
         
@@ -561,10 +633,15 @@ class CustomMainWindow(QMainWindow):
                 self.displayShortMessage(f"Please build a game tree and then try to display it.")
                 # Clearing UI related elements
                 self.ClearUIElements()
+                # Enabling the search options
+                self.__ui.ManualEntryFrame.isEnabled(False)
+                self.__ui.SearchStateButton.isEnabled(False)
                 # Returning None
                 return None
         else:
             self.displayShortMessage(f"Please build a game tree and then try to display it.")
+            self.__ui.ManualEntryFrame.isEnabled(False)
+            self.__ui.SearchStateButton.isEnabled(False)
             # Clearing UI related elements
             self.ClearUIElements()
             # Returning None

@@ -46,7 +46,14 @@ class NewGameDialog(QDialog):
         elif button_id == -3:
             # Returning Player O
             return f"O"
-        
+    
+    def getCustomGameStatus(self):
+        button_id = self.__newGameDialogBox.GameStateGroup.checkedId()
+        if button_id == -2:
+            return False
+        else:
+            return self.__newGameDialogBox.lineEdit.text()
+    
 # Creating a class for the Close Game Dialog
 class CloseGameDialog(QDialog):
     """docstring for CloseGameDialog."""

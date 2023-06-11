@@ -35,6 +35,7 @@ class DialogBox(QDialog):
         # Fetching the available state
         self.available_states = self.FetchAllStates()
         self.index = len(self.available_states)-1
+        self.updateTitle = False
         # Updating all values
         self.UpdateAllValues()
         # Creating connect event for the previous move button
@@ -102,13 +103,27 @@ class DialogBox(QDialog):
         self.ui.nodeVisitValue.setText(f"{node_data.NodeVisits}")
         # Updating the available child node values
         self.ui.childNodeValue.setText(f"{len(node_data.ChildNodes)}")
+        # Fetching the node depth value
+        depth_value = self.FindNodeDepth(deepcopy(node_data))
         # Updating the node depth value
-        self.ui.nodeDepthValue.setText(f"{self.index}")
+        self.ui.nodeDepthValue.setText(f"{depth_value}")
         # Updating the text value
         self.ui.NodeLabelInfo.setText(node_data.__str__())
         # Updating the creation value
         self.ui.createIterationValue.setText(f"{node_data.Creation}")
-        
+        if self.updateTitle:
+            self.updateTitleValue()
+
+    def updateTitleValue(self):
+        self.ui.NodeStateLabel.setText(f"States Found - {self.index+1}")
+    
+    def FindNodeDepth(self, node):
+        index = 0
+        while node.ParentNode:
+            node = node.ParentNode
+            index = index + 1
+        return index
+    
     # Defining method to fetch all the values in the list
     def FetchAllStates(self):
         new_data = [ ]

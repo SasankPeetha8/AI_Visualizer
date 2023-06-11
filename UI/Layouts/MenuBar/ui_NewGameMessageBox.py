@@ -20,15 +20,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QButtonGroup, QCheckBox,
-    QComboBox, QDialog, QDialogButtonBox, QFrame,
-    QGroupBox, QHBoxLayout, QLabel, QSizePolicy,
-    QVBoxLayout, QWidget)
+    QComboBox, QDialog, QDialogButtonBox, QFormLayout,
+    QFrame, QGroupBox, QHBoxLayout, QLabel,
+    QLineEdit, QSizePolicy, QVBoxLayout, QWidget)
 
 class Ui_NewGameDialog(object):
     def setupUi(self, NewGameDialog):
         if not NewGameDialog.objectName():
             NewGameDialog.setObjectName(u"NewGameDialog")
-        NewGameDialog.resize(453, 268)
+        NewGameDialog.resize(453, 390)
         sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -180,6 +180,33 @@ class Ui_NewGameDialog(object):
 
         self.verticalLayout.addWidget(self.PlayerOptions)
 
+        self.GameStateGroupBox = QGroupBox(NewGameDialog)
+        self.GameStateGroupBox.setObjectName(u"GameStateGroupBox")
+        self.formLayout = QFormLayout(self.GameStateGroupBox)
+        self.formLayout.setObjectName(u"formLayout")
+        self.BeginningCheckBox = QCheckBox(self.GameStateGroupBox)
+        self.GameStateGroup = QButtonGroup(NewGameDialog)
+        self.GameStateGroup.setObjectName(u"GameStateGroup")
+        self.GameStateGroup.addButton(self.BeginningCheckBox)
+        self.BeginningCheckBox.setObjectName(u"BeginningCheckBox")
+        self.BeginningCheckBox.setChecked(True)
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.BeginningCheckBox)
+
+        self.CustomCheckBox = QCheckBox(self.GameStateGroupBox)
+        self.GameStateGroup.addButton(self.CustomCheckBox)
+        self.CustomCheckBox.setObjectName(u"CustomCheckBox")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.CustomCheckBox)
+
+        self.lineEdit = QLineEdit(self.GameStateGroupBox)
+        self.lineEdit.setObjectName(u"lineEdit")
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lineEdit)
+
+
+        self.verticalLayout.addWidget(self.GameStateGroupBox)
+
         self.DialogButtons = QDialogButtonBox(NewGameDialog)
         self.DialogButtons.setObjectName(u"DialogButtons")
         self.DialogButtons.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
@@ -213,5 +240,8 @@ class Ui_NewGameDialog(object):
         self.PlayerOManualBox.setText(QCoreApplication.translate("NewGameDialog", u"Manual", None))
         self.PlayerORandomBox.setText(QCoreApplication.translate("NewGameDialog", u"Random", None))
         self.PlayerOAIBox.setText(QCoreApplication.translate("NewGameDialog", u"AI (MCTS)", None))
+        self.GameStateGroupBox.setTitle(QCoreApplication.translate("NewGameDialog", u"Game State:", None))
+        self.BeginningCheckBox.setText(QCoreApplication.translate("NewGameDialog", u"Beginning", None))
+        self.CustomCheckBox.setText(QCoreApplication.translate("NewGameDialog", u"Custom State", None))
     # retranslateUi
 

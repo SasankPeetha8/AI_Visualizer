@@ -258,39 +258,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_7.addWidget(self.LimitsFrame)
 
-        self.ManualEntryFrame = QFrame(self.AIMoveFrame)
-        self.ManualEntryFrame.setObjectName(u"ManualEntryFrame")
-        sizePolicy1.setHeightForWidth(self.ManualEntryFrame.sizePolicy().hasHeightForWidth())
-        self.ManualEntryFrame.setSizePolicy(sizePolicy1)
-        self.ManualEntryFrame.setFrameShape(QFrame.StyledPanel)
-        self.ManualEntryFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_6 = QHBoxLayout(self.ManualEntryFrame)
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.LimitsLabel = QLabel(self.ManualEntryFrame)
-        self.LimitsLabel.setObjectName(u"LimitsLabel")
-        sizePolicy1.setHeightForWidth(self.LimitsLabel.sizePolicy().hasHeightForWidth())
-        self.LimitsLabel.setSizePolicy(sizePolicy1)
-
-        self.horizontalLayout_6.addWidget(self.LimitsLabel)
-
-        self.AILimitsEdit = QLineEdit(self.ManualEntryFrame)
-        self.AILimitsEdit.setObjectName(u"AILimitsEdit")
-        sizePolicy6.setHeightForWidth(self.AILimitsEdit.sizePolicy().hasHeightForWidth())
-        self.AILimitsEdit.setSizePolicy(sizePolicy6)
-        self.AILimitsEdit.setInputMethodHints(Qt.ImhNone)
-
-        self.horizontalLayout_6.addWidget(self.AILimitsEdit)
-
-
-        self.verticalLayout_7.addWidget(self.ManualEntryFrame)
-
-        self.AIBuildTreeButton = QPushButton(self.AIMoveFrame)
-        self.AIBuildTreeButton.setObjectName(u"AIBuildTreeButton")
-        sizePolicy1.setHeightForWidth(self.AIBuildTreeButton.sizePolicy().hasHeightForWidth())
-        self.AIBuildTreeButton.setSizePolicy(sizePolicy1)
-
-        self.verticalLayout_7.addWidget(self.AIBuildTreeButton)
-
         self.AIDisplayTreeButton = QPushButton(self.AIMoveFrame)
         self.AIDisplayTreeButton.setObjectName(u"AIDisplayTreeButton")
         sizePolicy1.setHeightForWidth(self.AIDisplayTreeButton.sizePolicy().hasHeightForWidth())
@@ -304,6 +271,39 @@ class Ui_MainWindow(object):
         self.AIMoveButton.setSizePolicy(sizePolicy1)
 
         self.verticalLayout_7.addWidget(self.AIMoveButton)
+
+        self.ManualEntryFrame = QFrame(self.AIMoveFrame)
+        self.ManualEntryFrame.setObjectName(u"ManualEntryFrame")
+        sizePolicy1.setHeightForWidth(self.ManualEntryFrame.sizePolicy().hasHeightForWidth())
+        self.ManualEntryFrame.setSizePolicy(sizePolicy1)
+        self.ManualEntryFrame.setFrameShape(QFrame.StyledPanel)
+        self.ManualEntryFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_6 = QHBoxLayout(self.ManualEntryFrame)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.stateValueLabel = QLabel(self.ManualEntryFrame)
+        self.stateValueLabel.setObjectName(u"stateValueLabel")
+        sizePolicy1.setHeightForWidth(self.stateValueLabel.sizePolicy().hasHeightForWidth())
+        self.stateValueLabel.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_6.addWidget(self.stateValueLabel)
+
+        self.stateValue = QLineEdit(self.ManualEntryFrame)
+        self.stateValue.setObjectName(u"stateValue")
+        sizePolicy6.setHeightForWidth(self.stateValue.sizePolicy().hasHeightForWidth())
+        self.stateValue.setSizePolicy(sizePolicy6)
+        self.stateValue.setInputMethodHints(Qt.ImhNone)
+
+        self.horizontalLayout_6.addWidget(self.stateValue)
+
+
+        self.verticalLayout_7.addWidget(self.ManualEntryFrame)
+
+        self.SearchStateButton = QPushButton(self.AIMoveFrame)
+        self.SearchStateButton.setObjectName(u"SearchStateButton")
+        sizePolicy1.setHeightForWidth(self.SearchStateButton.sizePolicy().hasHeightForWidth())
+        self.SearchStateButton.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_7.addWidget(self.SearchStateButton)
 
 
         self.verticalLayout.addWidget(self.AIMoveFrame)
@@ -416,11 +416,11 @@ class Ui_MainWindow(object):
         self.M_LimitButton.setText(QCoreApplication.translate("MainWindow", u"10 Iterations", None))
         self.H_LimitButton.setText(QCoreApplication.translate("MainWindow", u"100 Iterations", None))
         self.HighestLimit.setText(QCoreApplication.translate("MainWindow", u"1000 Iterations", None))
-        self.LimitsLabel.setText(QCoreApplication.translate("MainWindow", u"Enter the required limits: ", None))
-        self.AILimitsEdit.setText("")
-        self.AIBuildTreeButton.setText(QCoreApplication.translate("MainWindow", u"Build MCTS Tree", None))
         self.AIDisplayTreeButton.setText(QCoreApplication.translate("MainWindow", u"Display MCTS Tree", None))
         self.AIMoveButton.setText(QCoreApplication.translate("MainWindow", u"Make AI based Move", None))
+        self.stateValueLabel.setText(QCoreApplication.translate("MainWindow", u"Enter Board Positions", None))
+        self.stateValue.setText("")
+        self.SearchStateButton.setText(QCoreApplication.translate("MainWindow", u"Search for the State", None))
         self.TreeDisplayLabel.setText(QCoreApplication.translate("MainWindow", u"Tree Display", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
