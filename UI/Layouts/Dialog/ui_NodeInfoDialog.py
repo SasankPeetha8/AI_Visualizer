@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import sys, os
+from pathlib import Path
+resource_file_path = Path(os.getcwd()).joinpath(Path("./UI/Resources"))
+sys.path.append(str(resource_file_path))
 
 ################################################################################
 ## Form generated from reading UI file 'NodeInfoDialog.ui'

@@ -1,5 +1,6 @@
 # Importing the required PySide 6 Modules
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QDialog, QGraphicsView, QWidget
+from PySide6.QtGui import QPainter
 # Importing the random module
 import random
 # Importing the system module and path function from Pathlib module
@@ -74,6 +75,8 @@ class CustomMainWindow(QMainWindow):
         
         self.scene = None
         self.view = QGraphicsView()
+        # Making the rendering output smooth
+        self.view.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
         self.scroll_area = None
         self.v_layout = None
         
@@ -630,6 +633,8 @@ class CustomMainWindow(QMainWindow):
         # self.scene.setSceneRect(0,0, 800, 400)
         self.view = QGraphicsView()
         self.view.setScene(self.scene)
+        # Making the rendering output smooth
+        self.view.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
         self.scene.drawGraph()
         self.scene.UpdateColors()
         # Create a QScrollArea

@@ -1,3 +1,15 @@
+# Importing the system module and path function from Pathlib module
+import sys
+from pathlib import Path
+# Specifying the required paths
+IMPORT_PATHS = [
+    r"UI\Layouts\Dialog"
+]
+# sys.path.append([str(Path(each)) for each in IMPORT_PATHS])
+# Appending the required path to the system
+for each in IMPORT_PATHS:
+    sys.path.append(str(Path(each)))
+
 from PySide6.QtWidgets import QDialog, QDialogButtonBox
 from ui_NodeInfoDialog import Ui_NodeDialog
 from copy import deepcopy
@@ -152,6 +164,6 @@ class DialogBox(QDialog):
         # Updating the best move label
         self.ui.bestNodeValue.setText(f"{node.best_node}")
         # Updating the best move value
-        self.ui.bestNodeIterationsValue.setText(f"{node.requiredIterations + 1}")
+        self.ui.bestNodeIterationsValue.setText(f"{node.requiredIterations}")
         
         
