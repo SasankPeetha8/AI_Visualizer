@@ -448,7 +448,15 @@ class CustomMainWindow(QMainWindow):
                 self.displayLongMessage(f"Game Positions: {self.__game.BoardPositions}")
         except ValueError:
             self.displayShortMessage(f"Invalid limit provided for MCTS")
+    
+    # Defining method to disable tree visualiser area
+    def __toggleVisualiserArea(self, bool_value):
+        # Toggling the label
+        self.__ui.TreeDisplayLabel.setEnabled(bool_value)
+        # Toggling the UI
+        self.__ui.TreeDisplayLabel.setEnabled(bool_value)
         
+    
     # Defining method build MCTS Tree Data
     def BuildMCTSTreeInformation(self):
         # Updating the game object in the MCTS Object
@@ -465,11 +473,20 @@ class CustomMainWindow(QMainWindow):
             # Finding the current game state from the existing game tree
             game_tree = self.MCTS_Data.FindState(currentPlayer.GameTree, self.__game.BoardPositions)
             # Building the game tree
+            # Disabling the game play area
+            self.__disableGamePlayArea()
+            self.__toggleVisualiserArea(False)
             currentPlayer.GameTree = self.MCTS_Data.BuildTree(tree_data=game_tree)
+            self.__enableGamePlayArea()
+            self.__toggleVisualiserArea(True)
             # self.displayLongMessage(f"Building game Tree with Old Game Tree")
         else:
+            self.__disableGamePlayArea()
+            self.__toggleVisualiserArea(False)
             # Building the game tree
             currentPlayer.GameTree = self.MCTS_Data.BuildTree()
+            self.__enableGamePlayArea()
+            self.__toggleVisualiserArea(True)
             # self.displayLongMessage(f"Building game Tree with New Game Tree")
         # Updating the game board
             
