@@ -1,5 +1,5 @@
 # Importing the required PySide 6 Modules
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QDialog, QGraphicsView
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QDialog, QGraphicsView, QWidget
 # Importing the random module
 import random
 # Importing the system module and path function from Pathlib module
@@ -69,6 +69,7 @@ class CustomMainWindow(QMainWindow):
         self.__ui.AIBuildTreeButton.clicked.connect(self.AIBuildTreeButtonFunction)
         self.__ui.AIMoveButton.clicked.connect(self.MakeAIMoveFunction)
         self.__ui.AIDisplayTreeButton.clicked.connect(self.DisplayTreeFunction)
+        
         self.unique_nodes = { }
         
         self.scene = None
@@ -264,13 +265,29 @@ class CustomMainWindow(QMainWindow):
             # Displaying the message in the status bar
             # self.ui.statusbar.setStatusTip(f"New Game Begins")
             # self.__ui.statusbar.showMessage(f"Closed the game", timeout=2000)
+            # Clearing the game data
+            self.__game = None
+            # Clearning the MCTS Data
+            self.MCTS_Data = None
+            # Clearing UI related elements
+            self.ClearUIElements()
+            
             self.displayShortMessage(f"Closed the game")
         # If response is Cancel, then disable the new game but show the status
         else:
             # self.ui.statusbar.setStatusTip(f"User cancelled the new game")
             # self.__ui.statusbar.showMessage(f"The game continues", timeout=2000)
             self.displayShortMessage(f"The game continues")
-        
+    
+    # Defining method to clear UI related elements
+    def ClearUIElements(self):
+        # Clearing the unique nodes
+        self.unique_nodes = { }
+        # Creating an empty QWidget
+        self.view = QWidget()
+        # Creating a empty scene
+        self.__ui.TreeVisualizer.setWidget(self.view)
+    
     # Defining action for the load game
     def LoadGameAction(self):
         # Fetching thre required file name
@@ -434,41 +451,54 @@ class CustomMainWindow(QMainWindow):
         
     # Defining method build MCTS Tree Data
     def BuildMCTSTreeInformation(self):
-        # Updating the game object
+        # Updating the game object in the MCTS Object
         self.MCTS_Data.game_object = self.__game
         # Finding current game player
         currentPlayer = self.__game.FindCurrentPlayer()
         # Fetching information if Re-Use check box is enabled or not
         enableMCTSReuse = self.__ui.EnableReUseCheckBox.isEnabled()
+        # Fetching the game tree
+        game_tree = currentPlayer.GameTree
         # Checking if the Re-Use button is available or not
-        if enableMCTSReuse and currentPlayer.GameTree != None and currentPlayer.GameTree != False:
+        if enableMCTSReuse and game_tree != None and game_tree != False:
+            # currentPlayer.GameTree != None and currentPlayer.GameTree != False:
             # Finding the current game state from the existing game tree
             game_tree = self.MCTS_Data.FindState(currentPlayer.GameTree, self.__game.BoardPositions)
-            # Checking if the game tree is valid or not
-            if game_tree:
-                # Building the game tree
-                currentPlayer.GameTree = self.MCTS_Data.BuildTree(tree_data=game_tree)
-            else:
-                # Building the game tree
-                currentPlayer.GameTree = self.MCTS_Data.BuildTree()
+            # Building the game tree
+            currentPlayer.GameTree = self.MCTS_Data.BuildTree(tree_data=game_tree)
             # self.displayLongMessage(f"Building game Tree with Old Game Tree")
         else:
             # Building the game tree
             currentPlayer.GameTree = self.MCTS_Data.BuildTree()
             # self.displayLongMessage(f"Building game Tree with New Game Tree")
+        # Updating the game board
             
     # Defining method to make a move from the MCTS Data
     def MakeAIMoveFunction(self):
+        # Updating the game object in the MCTS Object
+        self.MCTS_Data.game_object = self.__game
         # Fetching the current player
         currentPlayer = self.__game.FindCurrentPlayer()
-        # Finding the best positions
-        best_positions = self.MCTS_Data.BestMove(currentPlayer.GameTree)
-        # Updating the nodes as per the positions
-        currentPlayer.GameTree = self.MCTS_Data.FindState(tree_data=currentPlayer.GameTree, positions=best_positions)
-        # Updating the game positions
-        self.__game.BoardPositions = best_positions
-        # Updating the game display
-        self.UpdateGameDisplay()
+        # Checking if the game is valid or not
+        if currentPlayer.GameTree:
+            # Checking if the current game state available
+            isStateAvailable = self.MCTS_Data.FindState(currentPlayer.GameTree, self.__game.BoardPositions)
+            # Validating the available game state
+            if isStateAvailable:
+                # Finding the best positions
+                best_positions = self.MCTS_Data.BestMove(currentPlayer.GameTree)
+                # Updating the nodes as per the positions
+                currentPlayer.GameTree = self.MCTS_Data.FindState(tree_data=currentPlayer.GameTree, positions=best_positions)
+                # Updating the game positions
+                self.__game.BoardPositions = best_positions
+                # Updating the game display
+                self.UpdateGameDisplay()
+            else:
+                # Displaying message to build the game tree
+                self.displayShortMessage(f"Please build the game tree and then retry.")
+        else:
+            # Displaying message to build the game tree
+            self.displayShortMessage(f"Please build the game tree and then retry.")
 
     # Defining method to extract the unique nodes
     def extractUniqueNodes(self, tree_node):
@@ -491,8 +521,27 @@ class CustomMainWindow(QMainWindow):
         # Fetching the MCTS Information
         game_tree = deepcopy(currentPlayer.GameTree)
         
+        # Making sure that the unique nodes are empty
         self.unique_nodes = { }
-        self.extractUniqueNodes(game_tree)
+        # Checking if the game tree is None
+        if game_tree:
+            # Fetching the state available
+            isStateAvailable = self.MCTS_Data.FindState(game_tree, self.__game.BoardPositions)
+            # Checking if valid state is available
+            if isStateAvailable:
+                self.extractUniqueNodes(game_tree)
+            else:
+                self.displayShortMessage(f"Please build a game tree and then try to display it.")
+                # Clearing UI related elements
+                self.ClearUIElements()
+                # Returning None
+                return None
+        else:
+            self.displayShortMessage(f"Please build a game tree and then try to display it.")
+            # Clearing UI related elements
+            self.ClearUIElements()
+            # Returning None
+            return None
         
         # print(f"Game Tree: {game_tree}, Type: {type(game_tree)}")
         

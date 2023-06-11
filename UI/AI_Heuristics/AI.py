@@ -264,19 +264,23 @@ class MCTS():
     
     # Defining method to find the current game state:
     def FindState(self, tree_data, positions):
-        # Iterating through all the nodes in the game tree
-        for each_node in tree_data.ChildNodes:
-            # Checking if the state of the child node is found
-            if each_node.NodeState == positions:
-                # Removing the parent of the child node
-                each_node.ParentNode = None
-                # Displaying the message
-                print(f"State found: {each_node.NodeState} == {positions}")
-                # Returning the child node
-                return each_node
-            else:
-                print(f"Not State found: {positions}")
-                return False
+        # Checking the positions of the root node
+        if (tree_data.NodeState == positions):
+            return tree_data
+        else:
+            # Iterating through all the nodes in the game tree
+            for each_node in tree_data.ChildNodes:
+                # Checking if the state of the child node is found
+                if each_node.NodeState == positions:
+                    # Removing the parent of the child node
+                    each_node.ParentNode = None
+                    # Displaying the message
+                    print(f"State found: {each_node.NodeState} == {positions}")
+                    # Returning the child node
+                    return each_node
+                else:
+                    print(f"Not State found: {positions}")
+                    return False
     
     # Defining method to find best move using MCTS
     def BestMove(self, node):
