@@ -62,7 +62,8 @@ class MCTS():
         # Calculating the total score
         score = exploitation_value + exploration_value
         # Returning the total score
-        return round(score, 2)
+        # return round(score, 2)
+        return score
     
     # Defining method for single node selection
     def Single_Select(self, node):

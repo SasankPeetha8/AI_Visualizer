@@ -475,8 +475,13 @@ class CustomMainWindow(QMainWindow):
             
     # Defining method to make a move from the MCTS Data
     def MakeAIMoveFunction(self):
-        # Updating the game object in the MCTS Object
-        self.MCTS_Data.game_object = self.__game
+        # Checking if MCTS Object is valid or not
+        if self.MCTS_Data:
+            # Updating the game object in the MCTS Object
+            self.MCTS_Data.game_object = self.__game
+        else:
+            self.displayShortMessage(f"Please build the game tree and then retry.")
+            return None
         # Fetching the current player
         currentPlayer = self.__game.FindCurrentPlayer()
         # Checking if the game is valid or not
@@ -496,9 +501,11 @@ class CustomMainWindow(QMainWindow):
             else:
                 # Displaying message to build the game tree
                 self.displayShortMessage(f"Please build the game tree and then retry.")
+                return None
         else:
             # Displaying message to build the game tree
             self.displayShortMessage(f"Please build the game tree and then retry.")
+            return None
 
     # Defining method to extract the unique nodes
     def extractUniqueNodes(self, tree_node):
@@ -607,6 +614,7 @@ class CustomMainWindow(QMainWindow):
         self.view = QGraphicsView()
         self.view.setScene(self.scene)
         self.scene.drawGraph()
+        self.scene.UpdateColors()
         # Create a QScrollArea
         # self.scroll_area = QScrollArea()
         # self.scroll_area.setWidget(self.view)

@@ -1,6 +1,8 @@
 from PySide6.QtWidgets import QDialog, QDialogButtonBox
 from ui_NodeInfoDialog import Ui_NodeDialog
 from copy import deepcopy
+import math
+
 # Creating a class
 class DialogBox(QDialog):
     """docstring for DialogBox."""
@@ -23,7 +25,16 @@ class DialogBox(QDialog):
             self.ui.previousMoveButton.setEnabled(False)
         if self.index == len(self.available_states)-1:
             self.ui.nextMoveButton.setEnabled(False)
-        
+    
+    # Fetch the node score value
+    def CalculateScore(self):
+        # Calculating the exploitation value
+        exploitation_value = self.data.NodeScore/self.data.NodeVisits
+        # Calculating the exploration value
+        exploration_value = math.sqrt(2) * ( math.sqrt((math.log10(self.data.ParentNode.NodeVisits))/self.data.NodeVisits))
+        # Calculating the total score
+        total_score = exploitation_value + exploration_value
+    
     # Defining method to fetch all the values in the list
     def FetchAllStates(self):
         new_data = [ ]
