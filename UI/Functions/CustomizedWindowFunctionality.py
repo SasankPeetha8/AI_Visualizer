@@ -1,6 +1,7 @@
 # Importing the required PySide 6 Modules
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QDialog, QGraphicsView, QWidget
 from PySide6.QtGui import QPainter
+from GraphicsDisplay import ZoomableGraphicsView
 # Importing the random module
 import random
 # Importing the system module and path function from Pathlib module
@@ -75,7 +76,8 @@ class CustomMainWindow(QMainWindow):
         self.unique_nodes = { }
         
         self.scene = None
-        self.view = QGraphicsView()
+        # self.view = QGraphicsView()
+        self.view = ZoomableGraphicsView(self.scene)
         # Making the rendering output smooth
         self.view.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
         self.scroll_area = None
@@ -708,7 +710,8 @@ class CustomMainWindow(QMainWindow):
         self.scene = GraphScene(graph, layout, unique_nodes)
         # print(f"Scenes Views: {self.scene.views.__dict__}")
         # self.scene.setSceneRect(0,0, 800, 400)
-        self.view = QGraphicsView()
+        # self.view = QGraphicsView()
+        self.view = ZoomableGraphicsView(self.scene)
         self.view.setScene(self.scene)
         # Making the rendering output smooth
         self.view.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
