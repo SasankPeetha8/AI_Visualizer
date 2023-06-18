@@ -90,7 +90,8 @@ class GraphScene(QGraphicsScene):
             # Updating the colour for the best node
                 each_circle.updateBrushColour(brush)
                 # Updating hte z value to display on the top
-                each_circle.setZValue(1)
+                each_circle.zValue = 1
+                each_circle.updateZValue()
                 # Fetching the node data
                 node_iterations = each_circle.node_info.minIterations
                 # Extracting the difference

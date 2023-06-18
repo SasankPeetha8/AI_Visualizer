@@ -23,6 +23,12 @@ class CircularButton(QGraphicsEllipseItem):
         self.__fillColour = QColor(f"#63dbea")
         # Defining the node outline colour
         self.__outlineColour = QColor(f"#1d1d1d")
+        # Defining the node highlight colour
+        self.__highlightColour = QColor(f"#F7CD2C")
+        # Defining the normal pen width
+        self.__normalPenWidth = 1
+        # Defining the highlight pen width
+        self.__highlightPenWidth = 2
         # Creating a new pen
         self.__pen = QPen(self.__outlineColour)
         # Creating a new brush
@@ -32,9 +38,33 @@ class CircularButton(QGraphicsEllipseItem):
         self.setPen(self.__pen)
         # Specifying to use the brush
         self.setBrush(self.__brush)
-        
+        # Specifying the z value
+        self.zValue = 0
         # Accepting the events
         self.setAcceptHoverEvents(True)
+    
+    
+    
+    # Defining method to update the zValue
+    def updateZValue(self):
+        self.setZValue(self.zValue)
+    
+    
+    def hoverEnterEvent(self, event):
+        pen = self.pen()
+        pen.setColor(self.__highlightColour)
+        pen.setWidth(self.__highlightPenWidth)
+        self.setPen(pen)
+        self.setZValue(2)
+        super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event):
+        pen = self.pen()
+        pen.setColor(self.__outlineColour)
+        pen.setWidth(self.__normalPenWidth)
+        self.setPen(pen)
+        self.updateZValue()
+        super().hoverLeaveEvent(event)
     
     # Defining the mouse press event
     def mousePressEvent(self, event):
