@@ -13,6 +13,7 @@ class GraphScene(QGraphicsScene):
         self.layout = layout
         self.nodeData = nodes_data
         self.nodes_stored = [ ]
+        self.circles_available = { }
         
         
 
@@ -37,6 +38,8 @@ class GraphScene(QGraphicsScene):
             self.addItem(ellipse)
             # Appending the ellipse buttons into the nodes_stored
             self.nodes_stored = self.nodes_stored + [ ellipse ]
+            # Appending the nodes and circles into a dictionary
+            self.circles_available[self.nodeData[node_id]] = ellipse
         
          # Draw edges with arrows
         for u, v in self.graph.edges:
@@ -71,7 +74,8 @@ class GraphScene(QGraphicsScene):
         # Updating the colour for the root node
         root_node.updateBrushColour(brush)
         # Fetching the best node information
-        best_node = self.fetchBestNode(root_node)
+        # best_node = self.fetchBestNode(root_node)
+        best_node = self.fetchAllBestNodes(root_node)
         # Fetching the number of visits of the root node
         rootVisits = root_node.node_info.NodeVisits
         # Creating a list
@@ -85,6 +89,8 @@ class GraphScene(QGraphicsScene):
             for each_circle in best_node:
             # Updating the colour for the best node
                 each_circle.updateBrushColour(brush)
+                # Updating hte z value to display on the top
+                each_circle.setZValue(1)
                 # Fetching the node data
                 node_iterations = each_circle.node_info.minIterations
                 # Extracting the difference
@@ -93,7 +99,15 @@ class GraphScene(QGraphicsScene):
                 each_circle.node_info.best_node = True
                 each_circle.node_info.requiredIterations = difference[-1] if len(difference) > 0 else 0
                 
-                
+    # Defining method to find all the best nodes
+    def fetchAllBestNodes(self, circle_data):
+        best_circles = self.fetchBestNode(circle_data)
+        if best_circles:
+            for each_circle in best_circles:
+                sub_best_circle = self.fetchAllBestNodes(each_circle)
+                if sub_best_circle:
+                    best_circles = best_circles + sub_best_circle
+        return best_circles        
     
     # def updateRootNodeColor(self):
     #     # Fetching the root node information
@@ -104,7 +118,36 @@ class GraphScene(QGraphicsScene):
     #     brush = QBrush(fillColour)
     #     # Updating the brush colour for the root node
     #     root_node.updateBrushColour(brush)
-        
+    
+    # Fetch the node score value
+    def CalculateScore(self, node_data, isNormalise):
+        # Calculating the exploitation value
+        exploitation_value = node_data.NodeScore/node_data.NodeVisits
+        # Calculating the exploration value
+        exploration_value = math.sqrt(2) * ( math.sqrt((math.log(node_data.ParentNode.NodeVisits))/node_data.NodeVisits))
+        # Calculating the total score
+        total_score = exploitation_value + exploration_value
+        # Normalising the score
+        if total_score > 1 and isNormalise:
+            # Fetching all the sibling nodes
+            sibling_nodes = node_data.ParentNode.ChildNodes[:]
+            sibling_scores = self.fetchAllScores(sibling_nodes)
+            total_score = self.normalize_score(total_score, sibling_scores[0], sibling_scores[-1])
+        # Returning total score
+        return total_score
+    
+    def fetchAllScores(self, nodes_list):
+        scores_list = [ ]
+        for each_node in nodes_list:
+            score = self.CalculateScore(each_node, False)
+            scores_list = scores_list + [ score ]
+        # Sorting the list values
+        scores_list.sort()
+        return scores_list
+    
+    def normalize_score(self, score, min_score, max_score):
+        return score/max_score
+    
     def fetchBestNode(self, root_circle):
         # Defining the root node
         root_node = root_circle.node_info
@@ -112,41 +155,70 @@ class GraphScene(QGraphicsScene):
         score = float("-inf")
         # Defining the best node
         best_node = [ ]
-        # Iterating through all the elements
-        for child_node in root_node.ChildNodes:
-            # Calculating the exploitation value
-            exploitation_value = child_node.NodeScore/child_node.NodeVisits
-            # Calculating the exploration value
-            exploration_value = math.sqrt(2) * ( math.sqrt((math.log10(root_node.NodeVisits))/child_node.NodeVisits))
-            # Calculating the total score
-            total_score = exploitation_value + exploration_value
-            # total_score = round(score, 2)
-            # Checking the total score
-            if total_score > score:
-                # Updating the score value
-                score = total_score
-                # updating the list
-                best_node = [ child_node ]
-            elif total_score == score:
-                # Updating the list
-                best_node = best_node + [ child_node ]
+        # Checking if the child nodes are valid or not
+        if len(root_node.ChildNodes):    
+            # Iterating through all the elements
+            for child_node in root_node.ChildNodes:
+                total_score = self.CalculateScore(child_node, True)
+                
+                # # Calculating the exploitation value
+                # exploitation_value = child_node.NodeScore/child_node.NodeVisits
+                # # Calculating the exploration value
+                # exploration_value = math.sqrt(2) * ( math.sqrt((math.log10(root_node.NodeVisits))/child_node.NodeVisits))
+                # # Calculating the total score
+                # total_score = exploitation_value + exploration_value
+                # # total_score = round(score, 2)
+                # # Checking the total score
+                if total_score > score:
+                    # Updating the score value
+                    score = total_score
+                    # updating the list
+                    best_node = [ child_node ]
+                elif total_score == score:
+                    # Updating the list
+                    best_node = best_node + [ child_node ]
+            
+            # Circles found
+            circles_found = [ ]
+            # Iterating through the circle to find the node
+            for each_node in best_node:
+                circles_found = circles_found + [ self.circles_available[each_node] ]
+                # node_state = each_node.NodeState
+                # for each_circle in self.nodes_stored:
+                #     # Extracting the node info stored in each circle
+                #     circle_state = each_circle.node_info.NodeState
+                #     # Checking if the nodes states are matching or not
+                #     if node_state == circle_state:
+                        
+                #         # circles_found = circles_found + [ each_circle ]
+                #         circles_found = circles_found + [ self.circles_available[each_circle.node_info] ]
+                #         break
+                # Continuing with another node
+                # continue
+                        
+            # Returning the best node
+            return circles_found
         
-        # best_node =  best_node[0] if len(best_node) == 1 else random.choice(best_node)
+        else:
+            return False
+    
+    # Updating the size of all the elements stored
+    def modifyNodeSize(self, percent, scope):
         
-        # Circles found
-        circles_found = [ ]
-        # Iterating through the circle to find the node
-        for each_node in best_node:
-            node_state = each_node.NodeState
-            for each_circle in self.nodes_stored:
-                # Extracting the node info stored in each circle
-                circle_state = each_circle.node_info.NodeState
-                # Checking if the nodes states are matching or not
-                if node_state == circle_state:
-                    circles_found = circles_found + [ each_circle ]
-                    break
-            # Continuing with another node
-            # continue
-                    
-        # Returning the best node
-        return circles_found
+        # Calculating the size of the node
+        if scope == "increase":
+            size = 30 - ( 30 * percent)
+            size = 30 if size > 30 else size
+        elif scope == "decrease":
+            size = 30 - ( 30 * percent)
+        for each_node in self.nodes_stored:
+            each_node.updateNodeSize(size)
+            
+    # Updating the size of the arrow
+    def modifyArrowSize(self, percent, scope):
+        # Calculating the size of the arrow
+        for each_arrow in self.arrows_stored:
+            # Size of the arrow
+            points = each_arrow.polygon()
+            for each_point in points:
+                new_x = each_point.x() - percent

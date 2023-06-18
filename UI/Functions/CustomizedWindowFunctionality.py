@@ -96,7 +96,7 @@ class CustomMainWindow(QMainWindow):
         # Hide Tree View Label
         self.__ui.TreeDisplayLabel.setVisible(False)
         # Hiding the re-use tree checkbox
-        # self.__ui.EnableReUseCheckBox.setVisible(False)
+        self.__ui.EnableReUseCheckBox.setVisible(False)
         # Hiding the manual move frame
         self.__ui.ManualEntryFrame.setVisible(False)
         self.__ui.SearchStateButton.setVisible(False)
