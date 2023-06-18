@@ -3,7 +3,7 @@ from GameTree import Tree
 # Import time
 import time
 # Importing the math module
-from math import sqrt, log10
+from math import sqrt, log10, log
 # Importing the random module
 import random
 # Importing deep copy 
@@ -58,7 +58,9 @@ class MCTS():
         # Calculating the exploitation value
         exploitation_value = node_score/node_visits
         # Calculating the exploration value
-        exploration_value = self.ExpConst * ( sqrt((log10(parent_visits) )/node_visits ))
+        # exploration_value = self.ExpConst * ( sqrt((log10(parent_visits) )/node_visits ))
+        exploration_value = self.ExpConst * ( sqrt((log(parent_visits) )/node_visits ))
+        
         # Calculating the total score
         score = exploitation_value + exploration_value
         # Returning the total score
@@ -92,7 +94,9 @@ class MCTS():
         # Selecting the best move
         best_state = random.choice(best_moves) if (len(best_moves) > 1) else best_moves[0]
         # returning the best state
-        print(f"The following node is selected in Single Select Phase:\n{best_state}")
+        print(f"##SELECTION_PHASE## Iteration:{count} The following node is selected in Single Select Phase:{node.NodeState}\n{best_state}")
+        # print(f"##SELECTION_PHASE## Iteration:{iteration}  - The following node is selected in Select Node Phase:\{node.NodeState}\n{node}")
+        
         # Checking if count is valid
         if count:
         # Updating the min iterations value

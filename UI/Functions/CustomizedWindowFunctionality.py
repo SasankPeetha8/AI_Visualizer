@@ -96,7 +96,7 @@ class CustomMainWindow(QMainWindow):
         # Hide Tree View Label
         self.__ui.TreeDisplayLabel.setVisible(False)
         # Hiding the re-use tree checkbox
-        self.__ui.EnableReUseCheckBox.setVisible(False)
+        # self.__ui.EnableReUseCheckBox.setVisible(False)
         # Hiding the manual move frame
         self.__ui.ManualEntryFrame.setVisible(False)
         self.__ui.SearchStateButton.setVisible(False)
@@ -634,14 +634,14 @@ class CustomMainWindow(QMainWindow):
                 # Clearing UI related elements
                 self.ClearUIElements()
                 # Enabling the search options
-                self.__ui.ManualEntryFrame.isEnabled(False)
-                self.__ui.SearchStateButton.isEnabled(False)
+                self.__ui.ManualEntryFrame.setEnabled(False)
+                self.__ui.SearchStateButton.setEnabled(False)
                 # Returning None
                 return None
         else:
             self.displayShortMessage(f"Please build a game tree and then try to display it.")
-            self.__ui.ManualEntryFrame.isEnabled(False)
-            self.__ui.SearchStateButton.isEnabled(False)
+            self.__ui.ManualEntryFrame.setEnabled(False)
+            self.__ui.SearchStateButton.setEnabled(False)
             # Clearing UI related elements
             self.ClearUIElements()
             # Returning None
