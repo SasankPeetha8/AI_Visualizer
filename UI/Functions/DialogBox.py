@@ -49,6 +49,9 @@ class DialogBox(QDialog):
             self.ui.nextMoveButton.setEnabled(False)
         # Disabling the Best Move and Best move itertions
         # self.ToogleBestMove(False)
+        # Displaying the Circles found
+        self.available_circles = [ ]
+        self.enableUpdateCircles = False
     
     # Defining method to enable or disable the Best move
     def ToogleBestMove(self, bool_value):
@@ -138,6 +141,10 @@ class DialogBox(QDialog):
     
     # Defining method for the previous state event
     def previous_state_event(self):
+        # Update the colour of the circle
+        if self.enableUpdateCircles:
+            required_circle = self.available_circles[self.index]
+            required_circle.updateNormalColour()
         # Fetching the current index value
         self.index = self.index - 1
         # Updating the value
@@ -152,10 +159,21 @@ class DialogBox(QDialog):
         # # Updating the view
         # self.ui.NodeLabelInfo.setText(self.available_states[self.index].__str__())
         # self.ui.nodeWinValue.setText(f"{self.available_states[self.index].NodeScore}")
-        self.UpdateAllValues(self.available_states[self.index])
         
+        self.UpdateAllValues(self.available_states[self.index])
+        if self.enableUpdateCircles:
+            required_circle = self.available_circles[self.index]
+            required_circle.updateHoverColour()
+        
+    
+    
+    
     # Defining method for the next state event
     def next_state_event(self):
+        if self.enableUpdateCircles:
+            # Update the colour of the circle
+            required_circle = self.available_circles[self.index]
+            required_circle.updateNormalColour()
         # Fetching the current index value
         self.index = self.index + 1
         # Updating the value
@@ -171,6 +189,9 @@ class DialogBox(QDialog):
         # self.ui.NodeLabelInfo.setText(self.available_states[self.index].__str__())
         # self.ui.nodeWinValue.setText(f"{self.available_states[self.index].NodeScore}")
         self.UpdateAllValues(self.available_states[self.index])
+        if self.enableUpdateCircles:
+            required_circle = self.available_circles[self.index]
+            required_circle.updateHoverColour()
         
     # Defining method for the best state
     def BestStateDisplay(self, node):

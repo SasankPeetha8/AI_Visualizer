@@ -50,20 +50,26 @@ class CircularButton(QGraphicsEllipseItem):
         self.setZValue(self.zValue)
     
     
-    def hoverEnterEvent(self, event):
+    def updateHoverColour(self):
         pen = self.pen()
         pen.setColor(self.__highlightColour)
         pen.setWidth(self.__highlightPenWidth)
         self.setPen(pen)
         self.setZValue(2)
-        super().hoverEnterEvent(event)
-
-    def hoverLeaveEvent(self, event):
+        
+    def updateNormalColour(self):
         pen = self.pen()
         pen.setColor(self.__outlineColour)
         pen.setWidth(self.__normalPenWidth)
         self.setPen(pen)
         self.updateZValue()
+    
+    def hoverEnterEvent(self, event):
+        self.updateHoverColour()
+        super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event):
+        self.updateNormalColour()
         super().hoverLeaveEvent(event)
     
     # Defining the mouse press event

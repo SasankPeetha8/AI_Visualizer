@@ -624,11 +624,14 @@ class CustomMainWindow(QMainWindow):
         # Fetching the circular nodes
         availableCircles = self.scene.nodes_stored[:]
         states_found = [ ]
+        circles_found = [ ]
         # Iterating through all the circles to find the state
         for each_circle in availableCircles:
             circle_node_data = each_circle.node_info
             if circle_node_data.NodeState == board_positions:
+                
                 states_found = states_found + [ circle_node_data ]
+                circles_found = circles_found + [ each_circle ]
         
         if len(states_found):
             from DialogBox import DialogBox
@@ -637,6 +640,8 @@ class CustomMainWindow(QMainWindow):
             dialog_box.setWindowTitle(f"Searching required State")
             # updating the states in the dialog box
             dialog_box.available_states = states_found
+            dialog_box.available_circles = circles_found
+            dialog_box.enableUpdateCircles = True
             # updating the index
             dialog_box.index = 0
             dialog_box.UpdateAllValues()
