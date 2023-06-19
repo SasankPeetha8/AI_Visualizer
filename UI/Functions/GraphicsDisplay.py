@@ -29,3 +29,17 @@ class ZoomableGraphicsView(QGraphicsView):
         # Adjust the view to keep the elements at a constant size
         delta = newPos - oldPos
         self.translate(delta.x(), delta.y())
+        
+    # def __getstate__(self):
+    #     state = self.__dict__.copy()
+    #     # Remove non-serializable or unwanted attributes
+    #     # del state['_customAttribute']
+    #     # Add any additional modifications to the state if needed
+    #     # ...
+    #     return state
+
+    # def __setstate__(self, state):
+    #     # Restore the object state from the serialized state
+    #     self.__dict__.update(state)
+    #     # Perform any additional actions to initialize the object if needed
+    #     # ...

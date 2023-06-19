@@ -103,8 +103,8 @@ class CustomMainWindow(QMainWindow):
         self.__ui.ManualEntryFrame.setVisible(False)
         self.__ui.SearchStateButton.setVisible(False)
         # Hiding load game action
-        self.__ui.actionLoadGame.setVisible(False)
-        self.__ui.actionSaveGame.setVisible(False)
+        # self.__ui.actionLoadGame.setVisible(False)
+        # self.__ui.actionSaveGame.setVisible(False)
         
     ####################### Tree View Functionality #################################
     
@@ -323,13 +323,47 @@ class CustomMainWindow(QMainWindow):
     
     # Defining action for the load game
     def LoadGameAction(self):
+        import dill
         # Fetching thre required file name
         file_name = QFileDialog.getOpenFileName(self, caption="Load Existing Game", filter=f"All Files (*)")
         # Fetching only the filename with directory
         file_name = file_name[0]
         # Checking if the filename is valid or not
+        user_data = None
         if file_name:
             # self.__ui.statusbar.showMessage(f"Loaded the existing game", timeout=2000)
+            user_data = { }
+            with open(file_name, "rb") as file:
+                user_data = dill.load(file)
+            user_data = user_data.data
+            # Storing the game data
+            self.__game = user_data["game_data"]
+            # Storing the mcts data
+            self.MCTS_Data = user_data["mcts_data"]
+            # Storing the UniqueNodes Data
+            self.unique_nodes = user_data["unique_nodes"]
+            self.__ui.ManualMoveFrame.setVisible(user_data["ManualMoveFrame_Visibility"])
+            self.__ui.RandomMoveFrame.setVisible(user_data["RandomMoveFrame_Visibility"])
+            self.__ui.AIMoveFrame.setVisible(user_data["AIMoveFrame_Visibility"])
+            self.__ui.TreeVisualizer.setVisible(user_data["TreeVisualizer_Visibility"])
+            self.__ui.TreeDisplayLabel.setVisible(user_data["TreeDisplay_Visibility"])
+            self.__ui.ManualEntryFrame.setVisible(user_data["ManualEntryFrame_Visibility"])
+            self.__ui.SearchStateButton.setVisible(user_data["SearchStateButton_Visibility"])
+            self.__ui.GameRegion.setEnabled(user_data["GameRegion_Visibility"])
+            self.__ui.AIMoveFrame.setEnabled(user_data["AIMoveFrame_Enable"])
+            self.__ui.ManualMoveFrame.setEnabled(user_data["ManualMoveFrame_Enable"])
+            self.__ui.actionSaveGame.setEnabled(user_data["ActionSaveGame_Enable"])
+            self.__ui.actionCloseGame.setEnabled(user_data["ActionCloseGame_Enable"])
+            self.__ui.ManualLineInput.setText(user_data["ManualLineInput"])
+            # user_data["AILimitesEdit"] = self.__ui.AILimitsEdit.text()
+            self.__ui.stateValue.setText(user_data["StateValue"])
+            self.__ui.ManualEntryFrame.setVisible(user_data["ManualEntryFrame_Visibility"])
+            self.__ui.SearchStateButton.setVisible(user_data["SearchStateButton_Visibility"])
+            self.__ui.TimeCheckBox.setChecked(user_data["TimeCheckBox"])
+            self.__ui.IterationsCheckBox.setChecked(user_data["IterationsCheckBox"])
+            self.UpdateAIValuesFunction()
+            self.UpdateGameDisplay()
+            self.DisplayTreeFunction()
             self.displayShortMessage(f"Loaded the existing game")
         else:
             # self.__ui.statusbar.showMessage(f"User cancelled loading the game", timeout=2000)
@@ -344,10 +378,65 @@ class CustomMainWindow(QMainWindow):
         # Checking if the filename is valid or not
         if file_name:
             # self.__ui.statusbar.showMessage(f"Saved the game", timeout=2000)
-            self.displayShortMessage(f"Saved the game")
+            
+            from DataContainer import UserData
+            import pickle, dill
+            from copy import deepcopy
+            
+            session_data = { }
+            # Storing the game data
+            session_data["game_data"] = self.__game
+            # print(type(session_data["game_data"]))
+            # Storing the mcts data
+            session_data["mcts_data"] = self.MCTS_Data
+            # print(type(session_data["mcts_data"]))
+            # Storing the UniqueNodes Data
+            session_data["unique_nodes"] = deepcopy(self.unique_nodes)
+            # print(type(session_data["unique_nodes"]))
+            # Storing the scene
+            # # session_data["scene"] = self.scene
+            # print(type(session_data["scene"]))
+            # # Storing the view
+            # # session_data["view"] = self.view
+            # print(type(session_data["view"]))
+            # # Storing the scroll area
+            # # session_data["scroll"] = self.scroll_area
+            # print(type(session_data["scroll"]))
+            # Fetching the UI data
+            session_data["ManualMoveFrame_Visibility"] = self.__ui.ManualMoveFrame.isVisible()
+            session_data["RandomMoveFrame_Visibility"] = self.__ui.RandomMoveFrame.isVisible()
+            session_data["AIMoveFrame_Visibility"] = self.__ui.AIMoveFrame.isVisible()
+            session_data["TreeVisualizer_Visibility"] = self.__ui.TreeVisualizer.isVisible()
+            session_data["TreeDisplay_Visibility"] = self.__ui.TreeDisplayLabel.isVisible()
+            session_data["ManualEntryFrame_Visibility"] = self.__ui.ManualEntryFrame.isVisible()
+            session_data["SearchStateButton_Visibility"] = self.__ui.SearchStateButton.isVisible()
+            session_data["GameRegion_Visibility"] = self.__ui.GameRegion.isEnabled()
+            session_data["AIMoveFrame_Enable"] = self.__ui.AIMoveFrame.isEnabled()
+            session_data["ManualMoveFrame_Enable"] = self.__ui.ManualMoveFrame.isEnabled()
+            session_data["ActionSaveGame_Enable"] = self.__ui.actionSaveGame.isEnabled()
+            session_data["ActionCloseGame_Enable"] = self.__ui.actionCloseGame.isEnabled()
+            session_data["ManualLineInput"] = self.__ui.ManualLineInput.text()
+            # session_data["AILimitesEdit"] = self.__ui.AILimitsEdit.text()
+            session_data["StateValue"] = self.__ui.stateValue.text()
+            session_data["ManualEntryFrame_Visibility"] = self.__ui.ManualEntryFrame.isVisible()
+            session_data["SearchStateButton_Visibility"] = self.__ui.SearchStateButton.isVisible()
+            session_data["TimeCheckBox"] = self.__ui.TimeCheckBox.isChecked()
+            session_data["IterationsCheckBox"] = self.__ui.IterationsCheckBox.isChecked()
+            
+            # session_data["ThinkingTypeOptions"] = self.__ui.ThinkingTypeOptions.checkedId()
+            # self.__ui.ThinkingTypeOptions.setId
+        
+            save_data = UserData(session_data)
+            with open(f"{file_name}.pkl", "wb") as file:
+                dill.dump(save_data, file)
+                
+            self.displayShortMessage(f"Saved the game into {file_name}.pkl")
+        
         else:
             # self.__ui.statusbar.showMessage(f"User cancelled saving the game", timeout=2000)
             self.displayShortMessage(f"User cancelled saving the game")
+            
+        
             
     ###################### Game Options Functionality ###################################
     # Defining functionality for the random move button
@@ -397,6 +486,7 @@ class CustomMainWindow(QMainWindow):
 
         # Fetching the information from the AI Limit Type
         button_id = self.__ui.ThinkingTypeOptions.checkedId()
+        
 
         # Fetching the Button Name
         button = self.sender().objectName()

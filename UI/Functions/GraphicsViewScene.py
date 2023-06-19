@@ -14,8 +14,6 @@ class GraphScene(QGraphicsScene):
         self.nodeData = nodes_data
         self.nodes_stored = [ ]
         self.circles_available = { }
-        
-        
 
     def drawGraph(self):
         # Set up pen for drawing edges
@@ -223,3 +221,17 @@ class GraphScene(QGraphicsScene):
             points = each_arrow.polygon()
             for each_point in points:
                 new_x = each_point.x() - percent
+                
+    # def __getstate__(self):
+    #     state = self.__dict__.copy()
+    #     # Remove non-serializable or unwanted attributes
+    #     # del state['_customAttribute']
+    #     # Add any additional modifications to the state if needed
+    #     # ...
+    #     return state
+
+    # def __setstate__(self, state):
+    #     # Restore the object state from the serialized state
+    #     self.__dict__.update(state)
+    #     # Perform any additional actions to initialize the object if needed
+    #     # ...
