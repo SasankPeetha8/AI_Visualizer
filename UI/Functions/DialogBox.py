@@ -60,9 +60,9 @@ class DialogBox(QDialog):
         # Toogle Best Move value
         self.ui.bestNodeValue.setVisible(bool_value)
         # Toogle best iterations Label
-        self.ui.bestNodeIterationsLabel.setVisible(bool_value)
+        self.ui.bestNodeIterationsLabel.setVisible(False)
         # Toogle best iterations Value
-        self.ui.bestNodeIterationsValue.setVisible(bool_value)
+        self.ui.bestNodeIterationsValue.setVisible(False)
     
     # Fetch the node score value
     def CalculateScore(self, node_data):
