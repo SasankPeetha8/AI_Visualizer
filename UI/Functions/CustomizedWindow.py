@@ -2,14 +2,14 @@
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QDialog
 
 # Importing the system module and path function from Pathlib module
-import sys
+import sys, os
 from pathlib import Path
 # Specifying the required paths
 IMPORT_PATHS = [
-    r"UI\Layouts\MainWindow",
-    r"UI\Layouts\MenuBar",
-    r"UI\Layouts\GameArea",
-    r"UI\Functions"
+    f"{os.path.join('UI', 'Layouts', 'MainWindow')}",
+    f"{os.path.join('UI', 'Layouts', 'MenuBar')}",
+    f"{os.path.join('UI', 'Layouts', 'GameArea')}",
+    f"{os.path.join('UI', 'Functions')}"
 ]
 # sys.path.append([str(Path(each)) for each in IMPORT_PATHS])
 # Appending the required path to the system

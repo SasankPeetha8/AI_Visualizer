@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualiser for MCTS</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .container {
+        display: flex;
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+      }
+
+      .sidebar {
+        width: 18%;
+        border-right: 1px solid #ccc;
+        padding-right: 10px;
+      }
+
+      .content {
+        width: 80%;
+        padding-left: 1rem;
+        overflow-y: auto;
+        height: 100vh;
+        box-sizing: border-box;
+        padding-bottom: 8rem;
+      }
+
+      .sidebarlist {
+        margin-left: -1rem;
+      }
+
+      .sidebarlist li {
+        padding-bottom: 6px;
+      }
+
+      .bottomBorder {
+        text-align: center;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+      }
+
+      a {
+        text-decoration: none;
+        color: #3a3a3a;
+      }
+
+      table {
+        margin-left: auto;
+        margin-right: auto;
+        border-collapse: collapse;
+      }
+
+      .tabletext th,
+      .tabletext td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 class="bottomBorder">Visualiser for MCTS</h1>
+    <div class="container">
+      <!--left sidebar-->
+      <nav class="sidebar">
+        <h2>Contents</h2>
+        <ol class="sidebarlist">
+          <a href="#about-mcts">
+            <li>About MCTS</li>
+          </a>
+          <a href="#operation-text">
+            <li>Principle of Operation</li>
+          </a>
+          <ul class="sidebarlist">
+            <a href="#selection-text">
+              <li>Selection</li>
+            </a>
+            <a href="#expansion-text">
+              <li>Expansion</li>
+            </a>
+            <a href="#simulation-text">
+              <li>Simulation</li>
+            </a>
+            <a href="#backpropagation-text">
+              <li>Backpropagation</li>
+            </a>
+          </ul>
+          <a href="#use-cases-text">
+            <li>Use Cases for MCTS Visualiser</li>
+          </a>
+          <ul class="sidebarlist">
+            <a href="#uc-one">
+              <li>Identification of best move</li>
+            </a>
+            <a href="#uc-two">
+              <li>View the best path in the game trees</li>
+            </a>
+            <a href="#uc-three">
+              <li>Flexible use of iteration limit and time limit</li>
+            </a>
+            <a href="#uc-four">
+              <li>Flexibility to build the game tree from the required state</li>
+            </a>
+            <a href="#uc-five">
+              <li>Understand the expansion of various nodes in the game tree</li>
+            </a>
+            <a href="#uc-six">
+              <li>Extract information of any node in the game tree</li>
+            </a>
+            <a href="#uc-seven">
+              <li>Search for the required game state</li>
+            </a>
+            <a href="#uc-eight">
+              <li>Flexibility to choose between building the game tree or making a move</li>
+            </a>
+            <a href="#uc-nine">
+              <li>Compete against a human player</li>
+            </a>
+            <a href="#uc-tenth">
+              <li>Save and load application state</li>
+            </a>
+          </ul>
+        </ol>
+      </nav>
+
+      <main class="content">
+        <h2 id="about-mcts">About MCTS</h2>
+        <p>The Monte Carlo Tree Search (MCTS) algorithm is widely used in game-playing and decision-making domains. The algorithm finds the best possible move in the game by searching through the game tree and expanding the game tree by using random rollouts. In the beginning, when the algorithm is initialised, all the relevant information about the current game state is stored in the node. This node is called the root node. The information stored in this node includes data such as player positions, whose turn is to make a move, what moves are available, game status, etc. Using the current game state, it then finds all the possible moves and each possible move is added as a child node of the current game state. After adding the child node, the MCTS algorithm uses random playouts to simulate gameplay till the end to find the score and visit count of the position. This information is used to weigh the nodes. The node with a good score will most likely be chosen for future playouts. This method is repeated until the specified iteration or time limit is reached. However, the iteration or time limits can vary depending on the computational resources.</p>
+        <div class="bottomBorder"></div>
+        <!-- <h2 id="html-section">HTML 5</h2> -->
+        <h3 id="operation-text">Principle of Operation</h3>
+        <p>The Monte Carlo Tree Search consists of 4 phases which are explained below:</p>
+        <!-- <h2 id="css-section">CSS 3</h2> -->
+        <ol>
+          <li id="selection-text">Selection</li>
+          <p>In this phase, we start from the Root Node, i.e., the node where the initial or current game state is stored. We select appropriate child nodes from the root node until a leaf node is reached. To select a child node, we use a technique called <b>Exploration and Exploitation</b>, which helps maintain the balance between the exploring nodes with a few visits and choosing the nodes with a high win rate. According to Kocsis and Szepesvari, it is recommended to use the Upper Confidence Bound formula for the exploration and exploitation of nodes within the game tree. The Upper Confidence Bound formula is represented below:</p>
+          <p>\[ \frac{W_i}{n_i} + c\sqrt{\frac{\ln N_i}{n_i}} \]</p>
+          <p>
+            Here,
+            <br />
+            W<sub>i</sub> = number of wins of the i<sup>th</sup>
+            node.
+            <br />
+            n<sub>i</sub> = number of visits of the i<sup>th</sup>
+            node.
+            <br />
+            N<sub>i</sub> = number of visits of the parent node of the i<sup>th</sup>
+            node.
+            <br />
+            <i>c</i>
+            = Exploitation parameter, i.e., \( \sqrt{2} \), but it can be varied accordingly.
+          </p>
+          <li id="expansion-text">Expansion</li>
+          <p>The selected leaf node is then checked to see if it's a terminal node or not. If it's not a terminal node, then we find all the available moves at that particular game state and add each available move as a child node of that particular leaf node. Here we can add one available move per iteration as the child node. This newly added child node is chosen randomly for the simulation phase. If the node is terminal, then return the node without performing any expansion.</p>
+          <li id="simulation-text">Simulation</li>
+          <p>Using the selected child node, we perform a roll-out, i.e., we simulate gameplay by selecting a random move from the available moves for each player until the game has ended. At the end of the game, we check if the player has won, lost or if the game is draw and update the score accordingly.</p>
+          <li id="backpropagation-text">Backpropagation</li>
+          <p>The score from the simulation phase and the visit count of the child node selected in the expansion phase is then updated, starting from the child node to the root node. Here the visit count is incremented by 1 for each visit of the child node.</p>
+        </ol>
+        <p>By performing all 4 phases over the required iteration or time limit, we build the game tree and improve our search tree by finding the most promising moves. The above-mentioned method is implemented in Python. Here, during the playout, we increase the score by '1' if the game is won, the score is incremented by '0.5' if the game is draw, and the score is decreased by '1' if the game is lost.</p>
+        <div class="bottomBorder"></div>
+        <h3 id="use-cases-text">Use Cases for MCTS Visualiser</h3>
+        <p>Here are the list of all the features present in the Visualiser</p>
+        <h4 id="uc-one">Identification of best move</h4>
+        <p>The following table shows the Tic Tac Toe game board with position numbers.</p>
+        <table class="tabletext">
+          <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+          </tr>
+        </table>
+        <p>The Tic Tac Toe game of board size 3x3 has nine positions, illustrated in figure 1. At the beginning of the game, all the nine positions are empty. Here, we try to identify which position is most likely to win. The possible winning state for each position is given in Table.</p>
+        <table class="tabletext">
+          <tr>
+            <th>Positions Occupied</th>
+            <th>Possible Win States</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>(1, 2, 3), (1, 4, 7), (1, 5, 9)</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>(1, 2, 3), (2, 5, 8)</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>(1, 2, 3), (3, 6, 9), (3, 5, 7)</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>(4, 5, 6), (1, 4, 7)</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>(1, 5, 9), (2, 5, 8), (3, 5, 7), (4, 5, 6)</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>(3, 6, 9), (4, 5, 6)</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>(1, 4, 7), (3, 5, 7), (7, 8, 9)</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>(2, 5, 8), (7, 8, 9)</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>(1, 5, 9), (3, 6, 9), (7, 8, 9)</td>
+          </tr>
+        </table>
+        <p>From the table, it can be observed that position 5, i.e., the centre position has the high number of possible states to win. Hence, the MCTS should be able to identify this position. The MCTS Visualiser has run 1000 iterations on an empty 3x3 board. After 1000 iterations, it has found that the best move was the centre position and the minimum number of iterations it took to identify the centre position as the best move was 508. This information can be observed in image below.</p>
+        <img src="./Assets/BestNode.png" style="display: block; margin: auto" />
+        <h4 id="uc-two">View the best path in the game tree</h4>
+        <p>The MCTS Visualiser allows the user to see the best path in the entire game tree by representing all the best nodes using orange colour, starting from the root node to the end, as shown in figure below. This allows the user to quickly view information about the best possible moves taken by the MCTS algorithm.</p>
+        <img src="./Assets/BestPath.png" style="display: block; margin: auto; width: 40%; height: auto; resize: both; overflow: auto" />
+
+        <h4 id="uc-three">Flexible use of iteration limit and time limit</h4>
+        <p>The MCTS Visualiser allows users to switch between Iteration Limit and Time Limit dynamically. This feature, demonstrated in the following images, allows users to analyse the impact of different constraints on the game state. Users can better understand the algorithm's behavior, refine the algorithm, game heuristics, and make informed decisions. The Iteration Limit restricts the number of iterations before selecting a move, ensuring consistency. In contrast, the Time Limit allows as many iterations as possible within a specified time, sacrificing consistency but accommodating varying states to explore during the game. Although the Time Limit may result in longer processing times, it proves useful for real-world applications like pathfinding or optimising game moves. The MCTS Visualiser enables users to choose between Time Limit and Iteration Limit based on responsiveness requirements and available computational resources.</p>
+        <table>
+          <tr>
+            <td>
+              <img src="./Assets/IterationView.png" style="display: block; margin: auto; width: 60%; height: auto; resize: both; overflow: auto" />
+            </td>
+            <td>
+              <img src="./Assets/TimeView.png" style="display: block; margin: auto; width: 60%; height: auto; resize: both; overflow: auto" />
+            </td>
+          </tr>
+        </table>
+        <h4 id="uc-four">Flexibility to build the game tree from the required state</h4>
+        <p>The MCTS Visualiser offers a crucial feature that allows users to build the game tree from a specific game state, providing flexibility in addressing challenges encountered during the initial stages of algorithm development. In these early stages, the MCTS algorithm may exhibit poor performance or unexpected behavior, such as selecting suboptimal nodes from the game tree. Several factors, including faulty implementation in different algorithm phases and game heuristics, can contribute to these issues.</p>
+        <p>To resolve them, users need to debug and identify the underlying causes. The flexibility of building the game tree from a specific state enables users to pinpoint and address these issues efficiently. It allows users to isolate the problematic states where the algorithm fails to make optimal decisions, facilitating targeted troubleshooting. Additionally, users can test the effects of iteration and time constraints from a specific state by quickly generating the game tree, rather than gradually constructing it from the beginning. This capability empowers users to fine-tune their algorithm better to suit the requirements of the problem at hand. The functionality of building the game tree from a required state can be observed in following images of the MCTS Visualiser.</p>
+        <table>
+          <tr>
+            <td>
+              <img src="./Assets/GameState1.png" style="display: block; margin: auto; width: 60%; height: auto; resize: both; overflow: auto" />
+            </td>
+            <td>
+              <img src="./Assets/GameState2.png" style="display: block; margin: auto; width: 60%; height: auto; resize: both; overflow: auto" />
+            </td>
+          </tr>
+        </table>
+        <h4 id="uc-five">Understand the expansion of various nodes in the game tree</h4>
+        <p>The MCTS Algorithm's construction of the game tree involves exploring more nodes and creating new nodes, which can be observed using the MCTS Visualiser. Each node in the game tree represents a specific game state and its potential outcomes. The visualiser utilizes the Radial Tree Diagram layout to display all the nodes in the game tree. This layout positions the root node at the center, with child nodes expanding in different directions. Consequently, users can effortlessly view all the nodes in the game tree without manually expanding states. The MCTS Visualiser provides insights into node creation and their connections to the root node. Users can trace the path from the root node to a particular node, facilitating exploration of different possibilities and identification of patterns. This information can be utilized to fine-tune the algorithm according to specific requirements. The Radial Tree Diagram layout used by the MCTS Visualiser can be observed in the below image.</p>
+        <img src="./Assets/UnderstandingExpansion.png" style="display: block; margin: auto; width: 60%; height: auto; resize: both; overflow: auto" />
+        <h4 id="uc-six">Extract information of any node in the game tree</h4>
+        <p>The MCTS Visualiser allows the user to extract the following information from any node that is available in the game tree such as the following:</p>
+        <ol>
+          <li>
+            <b>Node Type:</b>
+            <br />It represents whether the node is a root, internal, leaf, or terminal node.
+          </li>
+          <li>
+            <b>Win Rate:</b>
+            <br />The Win rate of the node is calculated by using the Upper Confidence Bound applied to Trees (UCT).
+          </li>
+          <li>
+            <b>Visit Count:</b>
+            <br />The visit count displays the number of times the node has been visited while building the game tree using the MCTS Algorithm.
+          </li>
+          <li>
+            <b>Available Child Nodes:</b>
+            <br />It shows the number of child nodes available for the selected node.
+          </li>
+          <li>
+            <b>Created at Iteration:</b>
+            <br />It represents the number of iterations required for the MCTS to reach the selected node state.
+          </li>
+          <li>
+            <b>Node Depth:</b>
+            <br />It displays the depth of the node starting from the root node.
+          </li>
+          <li>
+            <b>Best Node:</b>
+            <br />If the node is found to be the best node, it displays True. Else, it is hidden.
+          </li>
+          <li>
+            <b>Previous State:</b>
+            <br />Every node in the game tree has a pth which starts from the root node and ends at the selected node. The previous state allows the user to go one step back in the path and view it's information. The user can go back until the root node is reached.
+          </li>
+          <li>
+            <b>Next State:</b>
+            <br />This allows the user to go one step forward in the path and view it's information. The user can go forward until the selected node state is reached.
+          </li>
+        </ol>
+        <p>Extracting the information from the node, as shown in figures below can provide insights for the node selection, node expansion, and identify patterns. Overall, it allows the user to understand the exploration and building of the game tree.</p>
+        <table>
+          <tr>
+            <td>
+              <img src="./Assets/NodeInformation.png" style="display: block; margin: auto; width: 60%; height: auto; resize: both; overflow: auto" />
+            </td>
+            <td>
+              <img src="./Assets/NodeInformationParent.png" style="display: block; margin: auto; width: 60%; height: auto; resize: both; overflow: auto" />
+            </td>
+          </tr>
+        </table>
+        <h4 id="uc-seven">Search for the required game state</h4>
+        <p>The MCTS Visualiser allows the user to visualise the game tree, and then it provides a feature to search for the particular game state from the game tree. This can be seen in following images. When the user provides the required game state, the MCTS Visualiser searches through all nodes available in the Game tree and then displays the information of the node with the same game state. It eliminates the need for manual exploration of the game tree. This helps the user quickly compare the node information and find the possible paths to reach the required state, which can be further used to fine-tune the algorithm.</p>
+        <table>
+          <tr>
+            <td>
+              <img src="./Assets/1.png" style="display: block; margin: auto; width: 50%; height: auto; resize: both; overflow: auto" />
+            </td>
+            <td>
+              <img src="./Assets/2.png" style="display: block; margin: auto; height: auto; resize: both; overflow: auto" />
+            </td>
+          </tr>
+        </table>
+        <h4 id="uc-eight">Flexibility to choose between building the game tree or making a move</h4>
+        Unlike MCTS algorithms that lack graphical user interfaces (GUI), many algorithms rely on specific time or iteration limits. These algorithms iterate, select the best move, and repeat until the game ends. However, validating the accuracy of node selection, determining the optimal time or iteration limits, and fine-tuning constraints for specific game states can be challenging. The MCTS Visualiser addresses these challenges by allowing users to perform iterations using time or iteration limits and build the game tree. Users can then validate node information, make moves, and rebuild the tree with the same or different constraints. This feature enables fine-tuning of iteration or time limits for specific game states, validating node selection accuracy, and optimising computational resource usage. The following image showcases this feature.
+        <img src="./Assets/3.png" style="display: block; margin: auto; width: 40%; height: auto; resize: both; overflow: auto" />
+        <h4 id="uc-nine">Compete against a human player</h4>
+        <p>The MCTS Visualiser can be used to play against the human player. In this case, one human player, Player X, can directly input the moves. Player O can use the MCTS to input their moves based on the game built by MCTS. During the gameplay, player O can use the MCTS algorithm to build the game tree, analyse it and make the best possible move. It also allows the player to fine-tune their algorithm to improve their performance in real-world scenarios. Using this approach, the user can fine-tune their MCTS algorithm much more quickly, allowing it to make decisions intelligently like a human. It can also help the user to identify the weak areas of the algorithm and improve them.</p>
+        <h4 id="uc-tenth">Save and load application state</h4>
+        Most of the MCTS Algorithms developed require the user to run the iterations and make their analysis before they can proceed to other works. This is because the MCTS algorithm uses tree data structure to build it’s game tree which makes it difficult for the user to store this information and use this information at a later point. Due to this, most developers have to spend lots of time running the algorithm and then performing the analysis without any breaks. It also prevents the user from sharing the existing game tree of the MCTS, making collaboration difficult with others. The MCTS Visualiser overcomes this challenge by allowing the user to store the state of their Application state, and at a later point of time, the user can load their stored application state. This allows the user to continue their work without starting it from the beginning. The store application state can also be shared with others using the same visualiser. This allows sharing the game tree developed by the MCTS algorithm, thus making collaboration with each other lot easier.
+        <p>This saving menu of the application state can be seen in following image.</p>
+        <img src="./Assets/4.png" style="display: block; margin: auto; width: 30%; height: auto; resize: both; overflow: auto" />
+        <p>The state of the application being save can be seen in the below image.</p>
+        <img src="./Assets/5.png" style="display: block; margin: auto; width: 30%; height: auto; resize: both; overflow: auto" />
+        <p>The loading menu of the application can be seen in the image given below.</p>
+        <img src="./Assets/6.png" style="display: block; margin: auto; width: 30%; height: auto; resize: both; overflow: auto" />
+        <p>The empty application state can be seen in the below image.</p>
+        <img src="./Assets/7.png" style="display: block; margin: auto; width: 30%; height: auto; resize: both; overflow: auto" />
+        <p>The application state after loading the data can be seen in the following image.</p>
+        <img src="./Assets/8.png" style="display: block; margin: auto; width: 30%; height: auto; resize: both; overflow: auto" />
+      </main>
+    </div>
+    <div class="bottomBorder"></div>
+  </body>
+</html>

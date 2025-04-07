@@ -1,9 +1,10 @@
 # This Python file uses the following encoding: utf-8
-import sys
+import sys, os
 from pathlib import Path
 # Appending the path
-# sys.path.append(str(Path(r"UI\Layouts\MainWindow")))
-sys.path.append(str(Path(r"UI\Functions")))
+# Specifying the path
+CustomizedWindow_Path = os.path.join('UI','Functions')
+sys.path.append(CustomizedWindow_Path)
 from CustomizedWindow import CustomMainWindow
 
 from PySide6.QtWidgets import QApplication, QMainWindow
@@ -19,8 +20,6 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = CustomMainWindow()
         self.ui.setupUi(self)
-
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
